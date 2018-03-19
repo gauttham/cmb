@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'cmb',
     'rest_framework',
+    'django_extensions',
 ]
 
 # Celery Stuff
@@ -150,3 +151,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# App Defaults
+DEFAULT_APP_USER = 'Khal Drogo'
