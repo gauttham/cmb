@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cmb',
     'rest_framework',
     'django_extensions',
+    'rest_framework_swagger',
 ]
 
 # Celery Stuff
