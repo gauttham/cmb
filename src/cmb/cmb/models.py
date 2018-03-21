@@ -63,16 +63,16 @@ class ExceptionList(models.Model):
 
 
 class PrepaidInCdr(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.CharField(primary_key=True, max_length=100)
     serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE)
     accountValueBeforeCall = models.FloatField()
     accountValueAfterCall = models.FloatField()
     callCharge = models.FloatField()
     chargedDuration = models.IntegerField()
     callStartTime = models.DateTimeField()
-    callerNumber = models.BigIntegerField()
-    calledNumber = models.BigIntegerField()
-    redirectingNumber = models.BigIntegerField(null=True)
+    callerNumber = models.IntegerField()
+    calledNumber = models.IntegerField()
+    redirectingNumber = models.IntegerField(null=True)
     GsmCallRefNumber = models.CharField(max_length=100)
     presentationIndicator = models.IntegerField()
     createdDate = models.DateTimeField()
@@ -97,4 +97,16 @@ class DaInCdrMap(models.Model):
     def __str__(self):
         return '%s: %s: %s: %s' % (self.PrepaidInCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
 
+
+class beepCDR(models.Model):
+    calledNumber = models.IntegerField()
+    callerNumber = models.IntegerField()
+    callStartTime = models.DateTimeField()
+    createdDate = models.DateTimeField()
+    updatedDate = models.DateTimeField()
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+
+    def __str__(self):
+        return '%s: %s' % (self.calledNumber, self.callerNumber)
 
