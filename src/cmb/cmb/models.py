@@ -124,4 +124,15 @@ class RevenueConfig(models.Model):
     createdDate = models.DateTimeField(default=timezone.now())
     updatedDate = models.DateTimeField(default=timezone.now())
 
+    def __str__(self):
+        return '%s: %s' % (self.BeepToCallGap, self.isActive)
 
+
+class Freebies(models.Model):
+    id = models.IntegerField(primary_key=True)
+    Name = models.CharField(max_length=100)
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.Name)
