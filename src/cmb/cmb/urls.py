@@ -38,6 +38,15 @@ urlpatterns = [
     url(r'^PrepaidInCdr/(?P<pk>[0-9]+)/$', views.PrepaidInCdrDetails.as_view()),
     url(r'^DaInCdrMap/$', views.DaInCdrMapList.as_view()),
     url(r'^DaInCdrMap/(?P<pk>[0-9]+)/$', views.DaInCdrMapDetails.as_view()),
+
+    url(r'^beepCDR/$', views.BeepCDRList.as_view()),
+    url(r'^beepCDR/(?P<pk>[0-9]+)/$', views.BeepCDRDetails.as_view()),
+    url(r'^RevenueConfig/$', views.RevenueConfigList.as_view()),
+    url(r'^RevenueConfig/(?P<pk>[0-9]+)/$', views.RevenueConfigDetails.as_view()),
+    url(r'^Freebies/$', views.FreebiesList.as_view()),
+    url(r'^Freebies/(?P<pk>[0-9]+)/$', views.FreebiesDetails.as_view()),
+    url(r'^FreebiesType/$', views.FreebiesTypeList.as_view()),
+    url(r'^FreebiesType/(?P<pk>[0-9]+)/$', views.FreebiesTypeDetails.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

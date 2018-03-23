@@ -1,5 +1,5 @@
-from .models import Snippet, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap
-from .serializers import SnippetSerializer, ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, PrepaidInCdrSerializer
+from .models import Snippet, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from .serializers import SnippetSerializer, ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, PrepaidInCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -272,6 +272,193 @@ class DaInCdrMapDetails(APIView):
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = DaInCdrMapSerializer(dataset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        dataset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+########
+
+class BeepCDRList(APIView):
+
+    def get(self, request, format=None):
+        dataset = beepCDR.objects.all()
+        serializer = beepCDRSerializer(dataset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = beepCDRSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BeepCDRDetails(APIView):
+    """
+
+    """
+
+    def get_object(self, id):
+        try:
+            return beepCDR.objects.get(pk=id)
+        except ServiceClass.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = beepCDRSerializer(dataset)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = beepCDRSerializer(dataset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        dataset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#######
+
+class RevenueConfigList(APIView):
+
+    def get(self, request, format=None):
+        dataset = RevenueConfig.objects.all()
+        serializer = RevenueConfigSerializer(dataset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = RevenueConfigSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RevenueConfigDetails(APIView):
+    """
+
+    """
+
+    def get_object(self, id):
+        try:
+            return RevenueConfig.objects.get(pk=id)
+        except ServiceClass.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = RevenueConfigSerializer(dataset)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = RevenueConfigSerializer(dataset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        dataset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+####
+
+class FreebiesList(APIView):
+
+    def get(self, request, format=None):
+        dataset = Freebies.objects.all()
+        serializer = FreebiesSerializer(dataset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = FreebiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FreebiesDetails(APIView):
+    """
+
+    """
+
+    def get_object(self, id):
+        try:
+            return Freebies.objects.get(pk=id)
+        except ServiceClass.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = FreebiesSerializer(dataset)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = FreebiesSerializer(dataset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        dataset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+###
+
+class FreebiesTypeList(APIView):
+
+    def get(self, request, format=None):
+        dataset = FreebiesType.objects.all()
+        serializer = FreebiesTypeSerializer(dataset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = FreebiesTypeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FreebiesTypeDetails(APIView):
+    """
+
+    """
+
+    def get_object(self, id):
+        try:
+            return FreebiesType.objects.get(pk=id)
+        except ServiceClass.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = FreebiesTypeSerializer(dataset)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dataset = self.get_object(pk)
+        serializer = FreebiesTypeSerializer(dataset, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

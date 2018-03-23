@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig
+from .models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
 
 
 class SnippetSerializer(serializers.ModelSerializer):
@@ -39,6 +39,7 @@ class ExceptionListSerializer(serializers.ModelSerializer):
 
 
 class PrepaidInCdrSerializer(serializers.ModelSerializer):
+    callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     class Meta:
@@ -58,12 +59,13 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
 
 
 class beepCDRSerializer(serializers.ModelSerializer):
+    callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = beepCDR
-        fields = ('BeepToCallGap', 'isActive', 'createdDate', 'updatedDate')
+        fields = ('calledNumber', 'callerNumber', 'callStartTime', 'createdDate', 'updatedDate')
 
 
 class RevenueConfigSerializer(serializers.ModelSerializer):
@@ -75,5 +77,21 @@ class RevenueConfigSerializer(serializers.ModelSerializer):
         fields = ('BeepToCallGap', 'isActive', 'createdDate', 'updatedDate')
 
 
+class FreebiesSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = Freebies
+        fields = ('id', 'Name', 'createdDate', 'updatedDate')
+
+
+class FreebiesTypeSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = FreebiesType
+        fields = ('id', 'Name', 'createdDate', 'updatedDate')
 
 
