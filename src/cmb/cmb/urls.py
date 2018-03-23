@@ -19,8 +19,12 @@ from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.documentation import include_docs_urls
 
+from rest_framework_swagger.views import get_swagger_view
+schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
+
+
 urlpatterns = [
-    url(r'^docs/', include_docs_urls(title='CMB Reconciliation Tool APIs', public=False)),
+    url(r'^docs/', schema_view),
     url(r'^admin/', admin.site.urls),
     url(r'^snippets/$', views.SnippetList.as_view()),
     url(r'^snippets/(?P<pk>[0-9]+)/$', views.SnippetDetail.as_view()),
