@@ -77,6 +77,8 @@ def loadPrepaidInCrd(ppincdr):
             except ValueError as e:
                 print(e)
                 print(row)
+    except Exception as e:
+        print("Some Error Occurred:", e)
 
 
 def loadBeepCDR(beep_cdr):

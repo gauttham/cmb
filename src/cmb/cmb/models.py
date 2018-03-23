@@ -2,6 +2,7 @@ from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 from . import settings
+from django.utils import timezone
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
@@ -26,8 +27,11 @@ class Snippet(models.Model):
 class ServiceClass(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=100)
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    isRevenueShare = models.BooleanField(default=False)
+    inMobilesPercentage = models.IntegerField(null=True, default=50)
+    otherOperatorPercentage = models.IntegerField(null=True, default=50)
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -40,8 +44,8 @@ class DedicatedAccount(models.Model):
     product = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     sub_type = models.CharField(max_length=100)
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -53,8 +57,8 @@ class ExceptionList(models.Model):
     id = models.IntegerField(primary_key=True)
     number = models.CharField(max_length=100, db_index=True)
     type = models.CharField(max_length=50)
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -75,8 +79,10 @@ class PrepaidInCdr(models.Model):
     redirectingNumber = models.IntegerField(null=True)
     GsmCallRefNumber = models.CharField(max_length=100)
     presentationIndicator = models.IntegerField()
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    revenueShared = models.FloatField(null=True)
+    reason = models.CharField(max_length=100, blank=True)
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -89,8 +95,8 @@ class DaInCdrMap(models.Model):
     DedicatedAccount = models.ForeignKey(DedicatedAccount, on_delete=models.CASCADE)
     valueBeforeCall = models.FloatField()
     valueAfterCall = models.FloatField()
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -102,11 +108,20 @@ class beepCDR(models.Model):
     calledNumber = models.IntegerField()
     callerNumber = models.IntegerField()
     callStartTime = models.DateTimeField()
-    createdDate = models.DateTimeField()
-    updatedDate = models.DateTimeField()
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.calledNumber, self.callerNumber)
+
+
+class RevenueConfig(models.Model):
+    BeepToCallGap = models.IntegerField(default=60)  # in minutes
+    isActive = models.BooleanField(default=False)
+
+    createdDate = models.DateTimeField(default=timezone.now())
+    updatedDate = models.DateTimeField(default=timezone.now())
+
 
