@@ -26,8 +26,6 @@ schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
 urlpatterns = [
     url(r'^docs/', schema_view),
     url(r'^admin/', admin.site.urls),
-    url(r'^snippets/$', views.SnippetList.as_view()),
-    url(r'^snippets/(?P<pk>[0-9]+)/$', views.SnippetDetail.as_view()),
     url(r'^DedicatedAccounts/$', views.DedicatedAccountList.as_view()),
     url(r'^DedicatedAccounts/(?P<pk>[0-9]+)/$', views.DedicatedAccountDetails.as_view()),
     url(r'^ServiceClasses/$', views.ServiceClassList.as_view()),

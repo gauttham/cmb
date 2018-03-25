@@ -1,11 +1,6 @@
 from rest_framework import serializers
-from .models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
 
-
-class SnippetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Snippet
-        fields = ('id', 'title', 'code', 'linenos', 'language', 'style')
 
 
 class ServiceClassSerializer(serializers.ModelSerializer):
@@ -46,7 +41,8 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
-                  'GsmCallRefNumber', 'presentationIndicator', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+                  'GsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'createdDate', 'updatedDate',
+                  'createdBy', 'updatedBy')
 
 
 class DaInCdrMapSerializer(serializers.ModelSerializer):

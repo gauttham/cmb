@@ -23,6 +23,11 @@ def loadInitialData():
 
 
 def loadDedicatedAccount(da):
+    """
+
+    :param da: dataframe containing dedicated accounts information from spreadsheet
+    :return:
+    """
     print("Now Loading Dedicated Account:")
     try:
         for row in da.iterrows():

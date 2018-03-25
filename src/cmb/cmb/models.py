@@ -9,29 +9,14 @@ LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 
-class Snippet(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
-    code = models.TextField()
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES, default='python', max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES, default='friendly', max_length=100)
-
-    class Meta:
-        ordering = ('created',)
-
-    def __str__(self):
-        return self.title
-
-
 class ServiceClass(models.Model):
     id = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=50)
     isRevenueShare = models.BooleanField(default=False)
     inMobilesPercentage = models.IntegerField(null=True, default=50)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -39,31 +24,24 @@ class ServiceClass(models.Model):
         return '%s: %s' % (self.id, self.description)
 
 
-class DedicatedAccount(models.Model):
+class msisdnType(models.Model):
     id = models.IntegerField(primary_key=True)
-    product = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    sub_type = models.CharField(max_length=100)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    name = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return '%s: %s : %s :%s' % (self.id, self.product, self.type, self.sub_type)
+        return '%s: %s' % (self.id, self.name)
 
 
 class ExceptionList(models.Model):
-    id = models.IntegerField(primary_key=True)
-    number = models.CharField(max_length=100, db_index=True)
-    type = models.CharField(max_length=50)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    msisdn = models.IntegerField(primary_key=True)
+    msisdnType = models.ForeignKey(msisdnType, on_delete=models.CASCADE)
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
-        return '%s: %s: %s' % (self.id, self.number, self.type)
+        return '%s: %s' % (self.msisdn, self.msisdnType)
 
 
 class PrepaidInCdr(models.Model):
@@ -76,13 +54,13 @@ class PrepaidInCdr(models.Model):
     callStartTime = models.DateTimeField()
     callerNumber = models.IntegerField()
     calledNumber = models.IntegerField()
-    redirectingNumber = models.IntegerField(null=True)
+    redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
     GsmCallRefNumber = models.CharField(max_length=100)
     presentationIndicator = models.IntegerField()
-    revenueShared = models.FloatField(null=True)
-    reason = models.CharField(max_length=100, blank=True)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    revenueShared = models.FloatField(null=True, blank=True)
+    reason = models.CharField(max_length=100, blank=True, null=True)
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -90,26 +68,12 @@ class PrepaidInCdr(models.Model):
         return '%s: %s' % (self.id, self.serviceClass)
 
 
-class DaInCdrMap(models.Model):
-    PrepaidInCdr = models.ForeignKey(PrepaidInCdr, on_delete=models.CASCADE)
-    DedicatedAccount = models.ForeignKey(DedicatedAccount, on_delete=models.CASCADE)
-    valueBeforeCall = models.FloatField()
-    valueAfterCall = models.FloatField()
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-
-    def __str__(self):
-        return '%s: %s: %s: %s' % (self.PrepaidInCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
-
-
 class beepCDR(models.Model):
     calledNumber = models.IntegerField()
     callerNumber = models.IntegerField()
     callStartTime = models.DateTimeField()
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -120,9 +84,12 @@ class beepCDR(models.Model):
 class RevenueConfig(models.Model):
     BeepToCallGap = models.IntegerField(default=60)  # in minutes
     isActive = models.BooleanField(default=False)
+    timeDuration = models.IntegerField(default=30)  # This will run by default for the last 30 days worth of data
 
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.BeepToCallGap, self.isActive)
@@ -131,8 +98,10 @@ class RevenueConfig(models.Model):
 class Freebies(models.Model):
     id = models.IntegerField(primary_key=True)
     Name = models.CharField(max_length=100)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.Name)
@@ -141,9 +110,39 @@ class Freebies(models.Model):
 class FreebiesType(models.Model):
     id = models.IntegerField(primary_key=True)
     Name = models.CharField(max_length=100)
-    createdDate = models.DateTimeField(default=timezone.now())
-    updatedDate = models.DateTimeField(default=timezone.now())
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.Name)
+
+
+class DedicatedAccount(models.Model):
+    id = models.IntegerField(primary_key=True)
+    product = models.CharField(max_length=100)
+    type = models.ForeignKey(Freebies, on_delete=models.CASCADE)
+    sub_type = models.ForeignKey(FreebiesType, on_delete=models.CASCADE)
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+
+    def __str__(self):
+        return '%s: %s : %s :%s' % (self.id, self.product, self.type, self.sub_type)
+
+
+class DaInCdrMap(models.Model):
+    PrepaidInCdr = models.ForeignKey(PrepaidInCdr, on_delete=models.CASCADE)
+    DedicatedAccount = models.ForeignKey(DedicatedAccount, on_delete=models.CASCADE)
+    valueBeforeCall = models.FloatField(null=True, blank=True)
+    valueAfterCall = models.FloatField(null=True, blank=True)
+    createdDate = models.DateTimeField(default=timezone.now)
+    updatedDate = models.DateTimeField(default=timezone.now)
+    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+
+    def __str__(self):
+        return '%s: %s: %s: %s' % (self.PrepaidInCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
 
