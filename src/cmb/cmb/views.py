@@ -101,10 +101,11 @@ class DedicatedAccountDetails(APIView):
 #####
 
 class ExceptionListList(APIView):
+    import pdb; pdb.set_trace()
 
     def get(self, request, format=None):
         dataset = ExceptionList.objects.all()
-        serializer = DedicatedAccountSerializer(dataset, many=True)
+        serializer = ExceptionListSerializer(dataset, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
