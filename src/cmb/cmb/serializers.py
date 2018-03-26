@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
 
 
-
 class ServiceClassSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
@@ -29,7 +28,7 @@ class ExceptionListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExceptionList
-        fields = ('id', 'number', 'type', 'createdDate', 'updatedDate',
+        fields = ('msisdn', 'msisdnType', 'createdDate', 'updatedDate',
                   'createdBy', 'updatedBy')
 
 
@@ -37,12 +36,13 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
     class Meta:
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
-                  'GsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'createdDate', 'updatedDate',
-                  'createdBy', 'updatedBy')
+                  'GsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason',
+                  'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
 
 class DaInCdrMapSerializer(serializers.ModelSerializer):
