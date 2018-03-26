@@ -101,7 +101,6 @@ class DedicatedAccountDetails(APIView):
 #####
 
 class ExceptionListList(APIView):
-    import pdb; pdb.set_trace()
 
     def get(self, request, format=None):
         dataset = ExceptionList.objects.all()
