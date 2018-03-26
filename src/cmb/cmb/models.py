@@ -123,7 +123,7 @@ class DedicatedAccount(models.Model):
     id = models.IntegerField(primary_key=True)
     product = models.CharField(max_length=100)
     type = models.ForeignKey(Freebies, on_delete=models.CASCADE)
-    sub_type = models.ForeignKey(FreebiesType, on_delete=models.CASCADE)
+    sub_type = models.CharField(max_length=50, null=True, blank=True)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
