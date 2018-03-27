@@ -8,7 +8,8 @@ class ServiceClassSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceClass
-        fields = ('id', 'description', 'createdDate', 'updatedDate',
+        fields = ('id', 'description', 'isRevenueShare', 'inMobilesPercentage',
+                  'otherOperatorPercentage', 'createdDate', 'updatedDate',
                   'createdBy', 'updatedBy')
 
 
