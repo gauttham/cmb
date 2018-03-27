@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from django.utils import timezone
 
 
 class ServiceClassSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = ServiceClass
@@ -14,8 +15,8 @@ class ServiceClassSerializer(serializers.ModelSerializer):
 
 
 class DedicatedAccountSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = DedicatedAccount
@@ -24,8 +25,8 @@ class DedicatedAccountSerializer(serializers.ModelSerializer):
 
 
 class ExceptionListSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = ExceptionList
@@ -34,8 +35,8 @@ class ExceptionListSerializer(serializers.ModelSerializer):
 
 
 class DaInCdrMapSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     class Meta:
         model = DaInCdrMap
         fields = ('PrepaidInCdr', 'DedicatedAccount', 'valueBeforeCall', 'valueAfterCall',
@@ -50,8 +51,8 @@ class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
 
 class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True, read_only=True)
 
     class Meta:
@@ -64,8 +65,8 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
 
 class beepCDRSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = beepCDR
@@ -73,8 +74,8 @@ class beepCDRSerializer(serializers.ModelSerializer):
 
 
 class RevenueConfigSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = RevenueConfig
@@ -82,8 +83,8 @@ class RevenueConfigSerializer(serializers.ModelSerializer):
 
 
 class FreebiesSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = Freebies
@@ -91,8 +92,8 @@ class FreebiesSerializer(serializers.ModelSerializer):
 
 
 class FreebiesTypeSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
     class Meta:
         model = FreebiesType
