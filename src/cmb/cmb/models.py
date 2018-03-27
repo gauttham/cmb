@@ -45,7 +45,7 @@ class ExceptionList(models.Model):
 
 
 class PrepaidInCdr(models.Model):
-    id = models.CharField(primary_key=True, max_length=10)
+    id = models.AutoField(primary_key=True, max_length=10)
     serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE)
     accountValueBeforeCall = models.FloatField()
     accountValueAfterCall = models.FloatField()
