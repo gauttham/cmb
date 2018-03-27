@@ -59,6 +59,6 @@ WHERE
             msisdnType_id = 3)))
         AND TIMESTAMPDIFF(MINUTE,
         bc.callStartTime,
-        pic.callStartTime) <= 60
-        AND DATEDIFF(SYSDATE(), bc.createdDate) <= 30
+        pic.callStartTime) <= %s
+        AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s
         """

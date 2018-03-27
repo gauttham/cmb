@@ -7,7 +7,8 @@ from . import serializers as cmbserializers
 
 
 def getRevenueConfig():
-    revenueConfig = RevenueConfig.objects.get(isActive=True)
+    revenueConfig = RevenueConfig.objects.get(isActive=1)
+    print(revenueConfig)
     return revenueConfig
 
 
@@ -29,9 +30,10 @@ def RevenueCalculator():
 
     # Revenue Config will be used to parameterize the Revenue Calculator Query
     revenueConfig = getRevenueConfig()
+    queryStr = RevenueCalculatorQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
     try:
+        for row in executeCustomSql(queryStr):
 
-        for row in executeCustomSql(RevenueCalculatorQuery):
             flag = isServiceClassValid(row)
             scMetadata = getRevenueMetadatafromSC(row)
 
@@ -45,7 +47,7 @@ def RevenueCalculator():
             else:
                 for da in DaInCdrMap.objects.filter(PrepaidInCdr=row.get('CDRID')):
                     if da.valueBeforeCall > da.valueAfterCall:
-                        row['revenueShared'] = row.get['callCharge'] * scMetadata.inMobilesPercentage / 100
+                        row['revenueShared'] = row.get('callCharge') * scMetadata.inMobilesPercentage / 100
                         serializer = cmbserializers.PrepaidInCdrSerializer(data=row)
                         if serializer.is_valid():
                             serializer.save()
