@@ -17,8 +17,8 @@ class ServiceClass(models.Model):
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.description)
@@ -33,49 +33,49 @@ class msisdnType(models.Model):
 
 
 class ExceptionList(models.Model):
-    msisdn = models.IntegerField(primary_key=True)
+    msisdn = models.CharField(primary_key=True, max_length=20)
     msisdnType = models.ForeignKey(msisdnType, on_delete=models.CASCADE)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.msisdn, self.msisdnType)
 
 
 class PrepaidInCdr(models.Model):
-    id = models.CharField(primary_key=True, max_length=100)
+    id = models.CharField(primary_key=True, max_length=10)
     serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE)
     accountValueBeforeCall = models.FloatField()
     accountValueAfterCall = models.FloatField()
     callCharge = models.FloatField()
     chargedDuration = models.IntegerField()
     callStartTime = models.DateTimeField()
-    callerNumber = models.IntegerField()
-    calledNumber = models.IntegerField()
+    callerNumber = models.CharField(max_length=20)
+    calledNumber = models.CharField(max_length=20)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
-    GsmCallRefNumber = models.CharField(max_length=100)
+    gsmCallRefNumber = models.CharField(max_length=20, null=True)
     presentationIndicator = models.IntegerField()
     revenueShared = models.FloatField(null=True, blank=True)
     reason = models.CharField(max_length=100, blank=True, null=True)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.serviceClass)
 
 
 class beepCDR(models.Model):
-    calledNumber = models.IntegerField()
-    callerNumber = models.IntegerField()
+    calledNumber = models.CharField(max_length=20)
+    callerNumber = models.CharField(max_length=20)
     callStartTime = models.DateTimeField()
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.calledNumber, self.callerNumber)
@@ -88,8 +88,8 @@ class RevenueConfig(models.Model):
 
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.BeepToCallGap, self.isActive)
@@ -97,11 +97,11 @@ class RevenueConfig(models.Model):
 
 class Freebies(models.Model):
     id = models.IntegerField(primary_key=True)
-    Name = models.CharField(max_length=100)
+    Name = models.CharField(max_length=50)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.Name)
@@ -109,11 +109,11 @@ class Freebies(models.Model):
 
 class FreebiesType(models.Model):
     id = models.IntegerField(primary_key=True)
-    Name = models.CharField(max_length=100)
+    Name = models.CharField(max_length=50)
     createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(default=timezone.now)
-    createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
-    updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
+    createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.Name)
