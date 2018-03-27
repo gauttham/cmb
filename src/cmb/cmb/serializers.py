@@ -32,6 +32,15 @@ class ExceptionListSerializer(serializers.ModelSerializer):
                   'createdBy', 'updatedBy')
 
 
+class DaInCdrMapSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    class Meta:
+        model = DaInCdrMap
+        fields = ('PrepaidInCdr', 'DedicatedAccount', 'valueBeforeCall', 'valueAfterCall',
+                  'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+
+
 class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
@@ -41,16 +50,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
-                  'GsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason',
-                  'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
-
-
-class DaInCdrMapSerializer(serializers.ModelSerializer):
-    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    class Meta:
-        model = DaInCdrMap
-        fields = ('PrepaidInCdr', 'DedicatedAccount', 'valueBeforeCall', 'valueAfterCall',
+                  'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason',
                   'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
 
