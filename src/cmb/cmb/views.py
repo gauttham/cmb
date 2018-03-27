@@ -14,19 +14,21 @@ class ServiceClassList(APIView):
     def get(self, request, format=None):
         dataset = ServiceClass.objects.all()
         serializer = ServiceClassSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = ServiceClassSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ServiceClassDetails(APIView):
     """
-
+    
     """
     def get_object(self, id):
         try:
@@ -37,14 +39,16 @@ class ServiceClassDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = ServiceClassSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = ServiceClassSerializer(dataset, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -59,7 +63,9 @@ class DedicatedAccountList(APIView):
     def get(self, request, format=None):
         dataset = DedicatedAccount.objects.all()
         serializer = DedicatedAccountSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = DedicatedAccountSerializer(data=request.data)
@@ -83,7 +89,9 @@ class DedicatedAccountDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = DedicatedAccountSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -105,7 +113,9 @@ class ExceptionListList(APIView):
     def get(self, request, format=None):
         dataset = ExceptionList.objects.all()
         serializer = ExceptionListSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = ExceptionListSerializer(data=request.data)
@@ -129,7 +139,9 @@ class ExceptionListDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = ExceptionListSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -153,7 +165,9 @@ class PrepaidInCdrList(APIView):
         RevenueCalculator()
         dataset = PrepaidInCdr.objects.all()
         serializer = PrepaidInCdrSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = PrepaidInCdrSerializer(data=request.data)
@@ -177,7 +191,9 @@ class PrepaidInCdrDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = PrepaidInCdrSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -199,7 +215,9 @@ class DaInCdrMapList(APIView):
     def get(self, request, format=None):
         dataset = DaInCdrMap.objects.all()
         serializer = DaInCdrMapSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = DaInCdrMapSerializer(data=request.data)
@@ -223,7 +241,9 @@ class DaInCdrMapDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = DaInCdrMapSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -245,7 +265,9 @@ class BeepCDRList(APIView):
     def get(self, request, format=None):
         dataset = beepCDR.objects.all()
         serializer = beepCDRSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = beepCDRSerializer(data=request.data)
@@ -269,7 +291,9 @@ class BeepCDRDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = beepCDRSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -292,7 +316,9 @@ class RevenueConfigList(APIView):
     def get(self, request, format=None):
         dataset = RevenueConfig.objects.all()
         serializer = RevenueConfigSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = RevenueConfigSerializer(data=request.data)
@@ -316,7 +342,9 @@ class RevenueConfigDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = RevenueConfigSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -339,7 +367,9 @@ class FreebiesList(APIView):
     def get(self, request, format=None):
         dataset = Freebies.objects.all()
         serializer = FreebiesSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = FreebiesSerializer(data=request.data)
@@ -363,7 +393,9 @@ class FreebiesDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = FreebiesSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -386,7 +418,9 @@ class FreebiesTypeList(APIView):
     def get(self, request, format=None):
         dataset = FreebiesType.objects.all()
         serializer = FreebiesTypeSerializer(dataset, many=True)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def post(self, request, format=None):
         serializer = FreebiesTypeSerializer(data=request.data)
@@ -410,7 +444,9 @@ class FreebiesTypeDetails(APIView):
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
         serializer = FreebiesTypeSerializer(dataset)
-        return Response(serializer.data)
+        result = {'status': 'Success', 'results': serializer.data}
+        # serializer = ServiceClassSerializer(result, many=True)
+        return Response(result)
 
     def put(self, request, pk, format=None):
         dataset = self.get_object(pk)
