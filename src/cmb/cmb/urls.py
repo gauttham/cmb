@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^ExceptionList/$', views.ExceptionListList.as_view()),
     url(r'^ExceptionList/(?P<pk>[0-9]+)/$', views.ExceptionListDetails.as_view()),
     url(r'^PrepaidInCdr/$', views.PrepaidInCdrList.as_view()),
-    url(r'^PrepaidInCdr/(?P<pk>[0-9]+)/$', views.PrepaidInCdrDetails.as_view()),
+    url(r'^PrepaidInCdr/(?P<pk>[0-9a-zA-Z]+)/$', views.PrepaidInCdrDetails.as_view()),
     url(r'^DaInCdrMap/$', views.DaInCdrMapList.as_view()),
     url(r'^DaInCdrMap/(?P<pk>[0-9]+)/$', views.DaInCdrMapDetails.as_view()),
     url(r'^beepCDR/$', views.BeepCDRList.as_view()),

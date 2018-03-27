@@ -45,12 +45,13 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    dedicatedAccounts = DaInCdrMapSerializer(many=True, read_only=True)
 
     class Meta:
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
-                  'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason',
+                  'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
                   'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
 

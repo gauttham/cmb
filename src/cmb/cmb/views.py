@@ -28,7 +28,7 @@ class ServiceClassList(APIView):
 
 class ServiceClassDetails(APIView):
     """
-    
+
     """
     def get_object(self, id):
         try:

@@ -134,7 +134,7 @@ class DedicatedAccount(models.Model):
 
 
 class DaInCdrMap(models.Model):
-    PrepaidInCdr = models.ForeignKey(PrepaidInCdr, on_delete=models.CASCADE)
+    PrepaidInCdr = models.ForeignKey(PrepaidInCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts')
     DedicatedAccount = models.ForeignKey(DedicatedAccount, on_delete=models.CASCADE)
     valueBeforeCall = models.FloatField(null=True, blank=True)
     valueAfterCall = models.FloatField(null=True, blank=True)
