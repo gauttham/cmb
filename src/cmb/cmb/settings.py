@@ -100,18 +100,18 @@ ALLOWED_HOSTS = ['*']
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'cmb',
-    #     'USER': 'cmb_usr',
-    #     'PASSWORD': 'cmb123',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cmb',
+        'USER': 'cmb_usr',
+        'PASSWORD': 'cmb123',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'mydatabase',
+    # }
 }
 
 
