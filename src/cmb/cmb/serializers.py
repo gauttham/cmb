@@ -42,11 +42,17 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
                   'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
 
+class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DaInCdrMap
+        fields = ('DedicatedAccount', 'valueBeforeCall', 'valueAfterCall')
+
+
 class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    dedicatedAccounts = DaInCdrMapSerializer(many=True, read_only=True)
+    dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True, read_only=True)
 
     class Meta:
         model = PrepaidInCdr
