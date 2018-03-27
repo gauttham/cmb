@@ -37,17 +37,18 @@ class ExceptionListSerializer(serializers.ModelSerializer):
 class DaInCdrMapSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
-    daId = serializers.CharField(source='DedicatedAccount')
+    daId = serializers.CharField(source='dedicatedAccount')
     class Meta:
         model = DaInCdrMap
-        fields = ('PrepaidInCdr', 'DedicatedAccount', 'valueBeforeCall', 'valueAfterCall',
+        fields = ('id', 'PrepaidInCdr', 'daId', 'valueBeforeCall', 'valueAfterCall',
                   'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
 
 class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
+    daId = serializers.CharField(source='dedicatedAccount')
     class Meta:
         model = DaInCdrMap
-        fields = ('DedicatedAccount', 'valueBeforeCall', 'valueAfterCall')
+        fields = ('daId', 'valueBeforeCall', 'valueAfterCall')
 
 
 class PrepaidInCdrSerializer(serializers.ModelSerializer):
