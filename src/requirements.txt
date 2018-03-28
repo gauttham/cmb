@@ -8,7 +8,7 @@ chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 decorator==4.2.1
-Django==2.0.3
+Django
 django-celery-beat==1.1.1
 django-celery-results==1.0.1
 django-extensions==2.0.6
@@ -20,7 +20,7 @@ html5lib==1.0.1
 httpie==0.9.9
 idna==2.6
 ipykernel==4.8.2
-ipython==6.2.1
+ipython
 ipython-genutils==0.2.0
 ipywidgets==7.1.2
 itypes==1.1.0
