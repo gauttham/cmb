@@ -55,7 +55,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
-    dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True, read_only=True)
+    dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True)
 
     class Meta:
         model = PrepaidInCdr
@@ -63,6 +63,42 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
                   'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+
+    def create(self, validated_data):
+        das_data = validated_data.pop('dedicatedAccounts')
+        validated_data['serviceClass']
+        inCdr = PrepaidInCdr.objects.create(**validated_data)
+        for da_data in das_data:
+            DaInCdrMap.objects.create(PrepaidInCdr=inCdr, **da_data)
+        return {'status': 'Success'}
+
+    def update(self, instance, validated_data):
+        das_data = validated_data.pop('dedicatedAccounts')
+        das = instance.dedicatedAccounts.all()
+        das = list(das)
+        instance.serviceClass = validated_data.get('serviceClass', instance.serviceClass)
+        instance.accountValueBeforeCall = validated_data.get('accountValueBeforeCall', instance.accountValueBeforeCall)
+        instance.accountValueAfterCall = validated_data.get('accountValueAfterCall', instance.accountValueAfterCall)
+        instance.callCharge = validated_data.get('callCharge', instance.callCharge)
+        instance.chargedDuration = validated_data.get('chargedDuration', instance.chargedDuration)
+        instance.callStartTime = validated_data.get('callStartTime', instance.callStartTime)
+        instance.callerNumber = validated_data.get('callerNumber', instance.callerNumber)
+        instance.calledNumber = validated_data.get('calledNumber', instance.calledNumber)
+        instance.redirectingNumber = validated_data.get('redirectingNumber', instance.redirectingNumber)
+        instance.gsmCallRefNumber = validated_data.get('gsmCallRefNumber', instance.gsmCallRefNumber)
+        instance.presentationIndicator = validated_data.get('presentationIndicator', instance.presentationIndicator)
+        instance.revenueShared = validated_data.get('revenueShared', instance.revenueShared)
+        instance.reason = validated_data.get('reason', instance.reason)
+        instance.save()
+
+        for da_data in das_data:
+            da = das.pop(0)
+            da.PrepaidInCdr = PrepaidInCdr.objects.get(pk=instance.pk)
+            da.dedicatedAccount = DedicatedAccount.objects.get(pk=da_data.get('daId', da.dedicatedAccount))
+            da.valueBeforeCall = da_data.get('valueBeforeCall', da.valueBeforeCall)
+            da.save()
+
+        return {'status': 'Success'}
 
 
 class beepCDRSerializer(serializers.ModelSerializer):

@@ -8,7 +8,6 @@ from . import serializers as cmbserializers
 
 def getRevenueConfig():
     revenueConfig = RevenueConfig.objects.get(isActive=1)
-    print(revenueConfig)
     return revenueConfig
 
 

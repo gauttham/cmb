@@ -164,7 +164,7 @@ class PrepaidInCdrList(APIView):
         serializer = PrepaidInCdrSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'Status': '1'})
+            return Response({'status': '1'})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
