@@ -11,7 +11,7 @@ SELECT
     pic.calledNumber,
     pic.callStartTime AS 'pic_starttime',
     bc.callStartTime AS 'bc_starttime',
-    dim.DedicatedAccount_id,
+    dim.DedicatedAccount,
     dim.valueBeforeCall,
     dim.valueAfterCall,
     (callCharge * inMobilesPercentage / 100) revenue

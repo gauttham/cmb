@@ -46,6 +46,7 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
 
 class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
     daId = serializers.CharField(source='dedicatedAccount')
+
     class Meta:
         model = DaInCdrMap
         fields = ('daId', 'valueBeforeCall', 'valueAfterCall')
@@ -56,13 +57,17 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True)
+    daCount = serializers.SerializerMethodField('get_das_count')
 
     class Meta:
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
-                  'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+                  'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+
+    def get_das_count(self, obj):
+        return obj.dedicatedAccounts.count()
 
     def create(self, validated_data):
         das_data = validated_data.pop('dedicatedAccounts')
