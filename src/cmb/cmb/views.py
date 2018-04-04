@@ -25,7 +25,8 @@ class ServiceClassList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        resp = {'status': '0', 'Description': serializer.errors}
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ServiceClassDetails(APIView):
@@ -49,7 +50,8 @@ class ServiceClassDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        resp = {'status': '0', 'Description': serializer.errors}
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         dataset = self.get_object(pk)
@@ -70,7 +72,7 @@ class DedicatedAccountList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -96,7 +98,7 @@ class DedicatedAccountDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -118,7 +120,7 @@ class ExceptionListList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -144,7 +146,7 @@ class ExceptionListDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -172,7 +174,7 @@ class PrepaidInCdrList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -198,7 +200,7 @@ class PrepaidInCdrDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -220,7 +222,7 @@ class DaInCdrMapList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -246,7 +248,7 @@ class DaInCdrMapDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -268,7 +270,7 @@ class BeepCDRList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -294,7 +296,7 @@ class BeepCDRDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -317,7 +319,7 @@ class RevenueConfigList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -343,7 +345,7 @@ class RevenueConfigDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -366,7 +368,7 @@ class FreebiesList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -392,7 +394,7 @@ class FreebiesDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -415,7 +417,7 @@ class FreebiesTypeList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -441,7 +443,7 @@ class FreebiesTypeDetails(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'error': serializer.errors}
+        resp = {'status': '0', 'Description': serializer.errors}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
