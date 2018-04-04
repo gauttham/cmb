@@ -54,6 +54,7 @@ class PrepaidInCdr(models.Model):
     callStartTime = models.DateTimeField()
     callerNumber = models.CharField(max_length=20)
     calledNumber = models.CharField(max_length=20)
+    subscriberType = models.IntegerField(default=1)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
     gsmCallRefNumber = models.CharField(max_length=20, null=True, blank=True)
     presentationIndicator = models.IntegerField()

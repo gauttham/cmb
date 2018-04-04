@@ -62,7 +62,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     class Meta:
         model = PrepaidInCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
-                  'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'redirectingNumber',
+                  'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'subscriberType', 'redirectingNumber',
                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
                   'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
@@ -89,6 +89,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
         instance.callStartTime = validated_data.get('callStartTime', instance.callStartTime)
         instance.callerNumber = validated_data.get('callerNumber', instance.callerNumber)
         instance.calledNumber = validated_data.get('calledNumber', instance.calledNumber)
+        instance.subscriberType = validated_data.get('subscriberType', instance.subscriberType)
         instance.redirectingNumber = validated_data.get('redirectingNumber', instance.redirectingNumber)
         instance.gsmCallRefNumber = validated_data.get('gsmCallRefNumber', instance.gsmCallRefNumber)
         instance.presentationIndicator = validated_data.get('presentationIndicator', instance.presentationIndicator)
