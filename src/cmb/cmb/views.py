@@ -195,7 +195,6 @@ class PrepaidInCdrDetails(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        import pdb; pdb.set_trace()
         dataset = self.get_object(pk)
         callStartTime = request.data.get('callStartTime')
         request.data['callStartTime'] = datetime.strptime(callStartTime, '%d/%m/%y %H:%M:%S').strftime(

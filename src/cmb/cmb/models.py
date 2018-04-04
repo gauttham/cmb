@@ -15,8 +15,8 @@ class ServiceClass(models.Model):
     isRevenueShare = models.BooleanField(default=False)
     inMobilesPercentage = models.IntegerField(null=True, default=50)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -35,8 +35,8 @@ class msisdnType(models.Model):
 class ExceptionList(models.Model):
     msisdn = models.CharField(primary_key=True, max_length=20)
     msisdnType = models.ForeignKey(msisdnType, on_delete=models.CASCADE)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -59,8 +59,8 @@ class PrepaidInCdr(models.Model):
     presentationIndicator = models.IntegerField()
     revenueShared = models.FloatField(null=True, blank=True)
     reason = models.CharField(max_length=100, blank=True, null=True)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -72,8 +72,8 @@ class beepCDR(models.Model):
     calledNumber = models.CharField(max_length=20)
     callerNumber = models.CharField(max_length=20)
     callStartTime = models.DateTimeField()
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -86,8 +86,8 @@ class RevenueConfig(models.Model):
     isActive = models.BooleanField(default=False)
     timeDuration = models.IntegerField(default=30)  # This will run by default for the last 30 days worth of data
 
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -98,8 +98,8 @@ class RevenueConfig(models.Model):
 class Freebies(models.Model):
     id = models.IntegerField(primary_key=True)
     Name = models.CharField(max_length=50)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -110,8 +110,8 @@ class Freebies(models.Model):
 class FreebiesType(models.Model):
     id = models.IntegerField(primary_key=True)
     Name = models.CharField(max_length=50)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -124,8 +124,8 @@ class DedicatedAccount(models.Model):
     product = models.CharField(max_length=100)
     type = models.ForeignKey(Freebies, on_delete=models.CASCADE)
     sub_type = models.CharField(max_length=50, null=True, blank=True)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
@@ -138,8 +138,8 @@ class DaInCdrMap(models.Model):
     dedicatedAccount = models.IntegerField(null=True, blank=True)
     valueBeforeCall = models.FloatField(null=True, blank=True)
     valueAfterCall = models.FloatField(null=True, blank=True)
-    createdDate = models.DateTimeField(default=timezone.now, blank=True)
-    updatedDate = models.DateTimeField(default=timezone.now, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
