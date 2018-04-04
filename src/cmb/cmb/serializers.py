@@ -194,7 +194,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
             da.valueBeforeCall = da_data.get('valueBeforeCall', da.valueBeforeCall)
             da.save()
 
-        return {'status': 'Success'}
+        return {'status': '1'}
 
 
 class beepCDRSerializer(serializers.ModelSerializer):
