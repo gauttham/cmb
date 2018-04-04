@@ -99,7 +99,6 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
         for da_data in das_data:
             da = das.pop(0)
             da.PrepaidInCdr = PrepaidInCdr.objects.get(pk=instance.pk)
-            da.dedicatedAccount = DedicatedAccount.objects.get(pk=da_data.get('daId', da.dedicatedAccount))
             da.valueBeforeCall = da_data.get('valueBeforeCall', da.valueBeforeCall)
             da.save()
 
