@@ -158,7 +158,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
                   'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
     def get_das_count(self, obj):
-        return obj.dedicatedAccounts.count()
+        return DedicatedAccount.objects.count()
 
     def create(self, validated_data):
         das_data = validated_data.pop('dedicatedAccounts')
