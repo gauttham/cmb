@@ -7,6 +7,24 @@ class ServiceClassSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
+    def create(self, validated_data):
+        try:
+            ServiceClass.objects.create(**validated_data)
+            return {'status': '1'}
+        except Exception as e:
+            print ("Some Error Occurred")
+            return {'status': '0'}
+
+    def update(self, instance, validated_data):
+        instance.id = validated_data.get('id', instance.id)
+        instance.description = validated_data.get('description', instance.description)
+        instance.isRevenueShare = validated_data.get('isRevenueShare', instance.isRevenueShare)
+        instance.inMobilesPercentage = validated_data.get('inMobilesPercentage', instance.inMobilesPercentage)
+        instance.updatedDate = timezone.now
+        instance.otherOperatorPercentage = validated_data.get('otherOperatorPercentage', instance.otherOperatorPercentage)
+        instance.save()
+        return {'status': '1'}
+
     class Meta:
         model = ServiceClass
         fields = ('id', 'description', 'isRevenueShare', 'inMobilesPercentage',
@@ -18,6 +36,24 @@ class DedicatedAccountSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
 
+    def create(self, validated_data):
+        try:
+            DedicatedAccount.objects.create(**validated_data)
+            return {'status': '1'}
+        except Exception as e:
+            print ("Some Error Occurred")
+            return {'status': '0'}
+
+    def update(self, instance, validated_data):
+        instance.id = validated_data.get('id', instance.id)
+        instance.product = validated_data.get('product', instance.product)
+        instance.type = validated_data.get('type', instance.type)
+        instance.sub_type = validated_data.get('sub_type', instance.sub_type)
+        instance.updatedDate = timezone.now
+        instance.updatedBy = validated_data.get('updatedBy', instance.updatedBy)
+        instance.save()
+        return {'status': '1'}
+
     class Meta:
         model = DedicatedAccount
         fields = ('id', 'product', 'type', 'sub_type', 'createdDate', 'updatedDate',
@@ -27,6 +63,22 @@ class DedicatedAccountSerializer(serializers.ModelSerializer):
 class ExceptionListSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+
+    def create(self, validated_data):
+        try:
+            ExceptionList.objects.create(**validated_data)
+            return {'status': '1'}
+        except Exception as e:
+            print ("Some Error Occurred")
+            return {'status': '0'}
+
+    def update(self, instance, validated_data):
+        instance.msisdn = validated_data.get('msisdn', instance.msisdn)
+        instance.msisdnType = validated_data.get('msisdnType', instance.msisdnType)
+        instance.updatedDate = timezone.now
+        instance.updatedBy = validated_data.get('updatedBy', instance.updatedBy)
+        instance.save()
+        return {'status': '1'}
 
     class Meta:
         model = ExceptionList
@@ -38,6 +90,25 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     daId = serializers.CharField(source='dedicatedAccount')
+
+    def create(self, validated_data):
+        try:
+            DaInCdrMap.objects.create(**validated_data)
+            return {'status': '1'}
+        except Exception as e:
+            print ("Some Error Occurred")
+            return {'status': '0'}
+
+    def update(self, instance, validated_data):
+        instance.PrepaidInCdr = validated_data.get('PrepaidInCdr', instance.PrepaidInCdr)
+        instance.dedicatedAccount = validated_data.get('dedicatedAccount', instance.dedicatedAccount)
+        instance.valueBeforeCall = validated_data.get('valueBeforeCall', instance.valueBeforeCall)
+        instance.valueAfterCall = validated_data.get('valueAfterCall', instance.valueAfterCall)
+        instance.updatedDate = timezone.now
+        instance.updatedBy = validated_data.get('updatedBy', instance.updatedBy)
+        instance.save()
+        return {'status': '1'}
+
     class Meta:
         model = DaInCdrMap
         fields = ('id', 'PrepaidInCdr', 'daId', 'valueBeforeCall', 'valueAfterCall',
@@ -46,6 +117,26 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
 
 class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
     daId = serializers.CharField(source='dedicatedAccount')
+
+    def create(self, validated_data):
+        try:
+            DaInCdrMap.objects.create(**validated_data)
+            return {'status': '1'}
+        except Exception as e:
+            print ("Some Error Occurred")
+            return {'status': '0'}
+
+    def update(self, instance, validated_data):
+        instance.PrepaidInCdr = validated_data.get('PrepaidInCdr', instance.PrepaidInCdr)
+        instance.dedicatedAccount = validated_data.get('dedicatedAccount', instance.dedicatedAccount)
+        instance.valueBeforeCall = validated_data.get('valueBeforeCall', instance.valueBeforeCall)
+        instance.valueAfterCall = validated_data.get('valueAfterCall', instance.valueAfterCall)
+        instance.updatedDate = timezone.now
+        instance.updatedBy = validated_data.get('updatedBy', instance.updatedBy)
+        instance.save()
+        return {'status': '1'}
+
+
 
     class Meta:
         model = DaInCdrMap

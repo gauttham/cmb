@@ -15,7 +15,7 @@ class ServiceClass(models.Model):
     isRevenueShare = models.BooleanField(default=False)
     inMobilesPercentage = models.IntegerField(null=True, default=50)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
-    createdDate = models.DateTimeField(auto_now_add=True)
+    createdDate = models.DateTimeField(default=timezone.now)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
