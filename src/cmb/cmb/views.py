@@ -8,7 +8,7 @@ from .controllers import RevenueCalculator
 from datetime import datetime
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from . import loader
 
 class ServiceClassList(APIView):
     """
@@ -464,4 +464,39 @@ class simple(APIView):
             'auth': unicode(request.auth),  # None
         }
         return Response({'status': '1'})
+
+
+class BulkLoader(APIView):
+
+    def get(self, request):
+        userName = request.GET.get('userName')
+        tableName = request.GET.get('tableName')
+        filePath = request.GET.get('filePath')
+
+        if tableName == 'dedicatedAccount':
+            try:
+                loader.loadDedicatedAccount(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+
+        elif tableName == 'exceptionList':
+            try:
+                loader.loadExceptionList(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+
+        elif tableName == 'serviceClass':
+            try:
+                loader.loadServiceClass(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+        else:
+            return {'status': '0',
+                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
 

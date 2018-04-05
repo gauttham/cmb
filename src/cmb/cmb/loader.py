@@ -1,4 +1,4 @@
-from .models import DedicatedAccount, ServiceClass, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR
+from .models import DedicatedAccount, Freebies, ServiceClass, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, msisdnType
 import pandas as pd
 from datetime import datetime
 from django.utils import timezone
@@ -20,40 +20,6 @@ def loadInitialData():
 
     except Exception as e:
         print("Some Error Occurred:", e)
-
-
-def loadDedicatedAccount(da):
-    """
-
-    :param da: dataframe containing dedicated accounts information from spreadsheet
-    :return:
-    """
-    print("Now Loading Dedicated Account:")
-    try:
-        for row in da.iterrows():
-            m = DedicatedAccount(id=row[1]['DA Id'])
-            m.product = row[1]['Product/Plan']
-            m.type = row[1]['Type']
-            m.sub_type = row[1]['FREEBIES_TYPE']
-            m.createdDate = datetime.now()
-            m.updatedDate = datetime.now()
-            m.save()
-            return True
-    except Exception as e:
-        print("Some Error Occurred:", e)
-
-
-def loadServiceClass(sc):
-    try:
-        for row in sc.iterrows():
-            m = ServiceClass(id=row[1]['SC Id'])
-            m.description = row[1]['SC DESCRIPTION']
-            m.createdDate = datetime.now()
-            m.updatedDate = datetime.now()
-            m.save()
-            return True
-    except Exception as e:
-        print("Some Error Occurred: ", e)
 
 
 def loadPrepaidInCrd(ppincdr):
@@ -97,4 +63,69 @@ def loadBeepCDR(beep_cdr):
                 print("Some Error Occurred:", e)
     except Exception as e:
         print("Some Error Occurred:", e)
+
+# Bulk Loader Modules
+
+def loadExceptionList(userName, filePath):
+
+    try:
+        exc = pd.read_csv(filePath)
+        for row in exc.iterrows():
+            m = ExceptionList(msisdn=str(row[1]['msisdn']))
+            m.msisdnType = msisdnType.objects.get(id=row[1]['msisdnType'])
+            m.createdBy = str(userName)
+            m.updatedBy = str(userName)
+            try:
+                m.save()
+            except Exception as e:
+                print("Some Error Occurred while saving: ", str(e))
+                print(row)
+        return True
+    except Exception as e:
+        print("Some Error Occurred:", e)
+
+
+def loadDedicatedAccount(userName, filePath):
+    try:
+        da = pd.read_csv(filePath)
+
+        for row in da.iterrows():
+            m = DedicatedAccount(id=row[1]['id'])
+            m.product = row[1]['product']
+            m.type = Freebies.objects.get(id=row[1]['type_id'])
+            m.sub_type = str(row[1]['sub_type'])
+            m.createdBy = userName
+            m.updatedBy = userName
+            try:
+                m.save()
+            except Exception as e:
+                print("Some Error Occurred while saving: ", str(e))
+                print(row)
+        return True
+    except Exception as e:
+        print("Some Error Occurred: ", e)
+        return False
+
+
+def loadServiceClass(userName, filePath):
+    try:
+        sc = pd.read_csv(filePath)
+
+        for row in sc.iterrows():
+            m = ServiceClass(id=row[1]['id'])
+            m.description = row[1]['description']
+            m.isRevenueShare = row[1]['isRevenueShare']
+            m.inMobilesPercentage = str(row[1]['inMobilesPercentage'])
+            m.otherOperatorPercentage = str(row[1]['otherOperatorPercentage'])
+            m.createdBy = userName
+            m.updatedBy = userName
+            try:
+                m.save()
+            except Exception as e:
+                print("Some Error Occurred while saving: ", str(e))
+                print(row)
+        return True
+    except Exception as e:
+        print("Some Error Occurred: ", e)
+        return False
 

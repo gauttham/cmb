@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^Freebies/(?P<pk>[0-9]+)/$', views.FreebiesDetails.as_view()),
     url(r'^FreebiesType/$', views.FreebiesTypeList.as_view()),
     url(r'^FreebiesType/(?P<pk>[0-9]+)/$', views.FreebiesTypeDetails.as_view()),
+    url(r'BulkLoader/$', views.BulkLoader.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
