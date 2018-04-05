@@ -119,7 +119,7 @@ class ExceptionListList(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
-        resp = {'status': '0', 'description': serializer.errors.get('id')[0]}
+        resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
