@@ -23,7 +23,7 @@ FROM
     cmb_beepcdr bc
 WHERE
     pic.id = dim.PrepaidInCdr_id
-        AND da.id = dim.DedicatedAccount_id
+        AND da.id = dim.DedicatedAccount
         AND sc.id = pic.serviceClass_id
         AND (pic.calledNumber = bc.calledNumber
         AND pic.callerNumber = bc.callerNumber)
@@ -32,7 +32,7 @@ WHERE
         FROM
             cmb_daincdrmap in_dim
         WHERE
-            in_dim.DedicatedAccount_id = dim.DedicatedAccount_id)
+            in_dim.DedicatedAccount = dim.DedicatedAccount)
         AND ((pic.callerNumber NOT IN (SELECT
             msisdn
         FROM

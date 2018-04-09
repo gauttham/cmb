@@ -9,6 +9,8 @@ from datetime import datetime
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from . import loader
+from rest_framework.decorators import api_view
+
 
 class ServiceClassList(APIView):
     """
@@ -499,4 +501,46 @@ class BulkLoader(APIView):
         else:
             return {'status': '0',
                     'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
+
+    def post(self, request):
+        userName = request.data.get('userName')
+        tableName = request.data.get('tableName')
+        filePath = request.data.get('filePath')
+        if tableName == 'dedicatedAccount':
+            try:
+                loader.loadDedicatedAccount(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+
+        elif tableName == 'exceptionList':
+            try:
+                loader.loadExceptionList(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+
+        elif tableName == 'serviceClass':
+            try:
+                loader.loadServiceClass(userName, filePath)
+                return Response({'status': '1'})
+            except Exception as e:
+                print("Some Error Occurred: ", e)
+                return Response({'status': '0', 'description': str(e)})
+        else:
+            return {'status': '0',
+                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
+
+
+@api_view(['GET', 'POST'])
+def samplepost(request, format=None):
+
+    if request.method == 'GET':
+        return Response({'status': '2'})
+
+    elif request.method == 'POST':
+        print(request.method)
+        return Response({'status': request.data})
 
