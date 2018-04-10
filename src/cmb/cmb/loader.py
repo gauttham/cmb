@@ -92,7 +92,7 @@ def loadDedicatedAccount(userName, filePath):
         for row in da.iterrows():
             m = DedicatedAccount(id=row[1]['id'])
             m.product = row[1]['product']
-            m.type = Freebies.objects.get(id=row[1]['type_id'])
+            m.type = Freebies.objects.get(id=row[1]['type'])
             m.sub_type = str(row[1]['sub_type'])
             m.createdBy = userName
             m.updatedBy = userName

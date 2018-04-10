@@ -18,6 +18,7 @@ from django.contrib import admin
 from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.documentation import include_docs_urls
+from . import csvloader
 
 from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
@@ -29,6 +30,7 @@ urlpatterns = [
     url(r'^DedicatedAccounts/$', views.DedicatedAccountList.as_view()),
     url(r'^DedicatedAccounts/(?P<pk>[0-9]+)/$', views.DedicatedAccountDetails.as_view()),
     url(r'^ServiceClasses/$', views.ServiceClassList.as_view()),
+    url(r'^ServiceClasses/(?P<csv>[0-9a-zA-Z]+)/$', views.ServiceClassList.as_view()),
     url(r'^ServiceClasses/(?P<pk>[0-9]+)/$', views.ServiceClassDetails.as_view()),
     url(r'^ExceptionList/$', views.ExceptionListList.as_view()),
     url(r'^ExceptionList/(?P<pk>[0-9]+)/$', views.ExceptionListDetails.as_view()),
@@ -46,8 +48,9 @@ urlpatterns = [
     url(r'^FreebiesType/(?P<pk>[0-9]+)/$', views.FreebiesTypeDetails.as_view()),
     url(r'^BulkLoader/$', views.BulkLoader.as_view()),
     # url(r'^BulkLoader/$', views.samplepost),
-    # url(r'^sample/$', views.BulkLoader.as_view()),
+    # url(r'^sample/$', views.DAViewSet.as_view()),
+    url(r'^dacsv/$', csvloader.DAViewSet.as_view()),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])
 

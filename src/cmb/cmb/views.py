@@ -10,16 +10,26 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from . import loader
 from rest_framework.decorators import api_view
+from .decorators import loadCsv
+def dec(func):
+    def wrapper(*args, **kwargs):
+        print("Something is happening ")
+        print(args[0], args[1].query_params.get('format'))
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 class ServiceClassList(APIView):
     """
     List all Service Classes, or create a new service class
     """
+    @loadCsv
     def get(self, request, format=None):
         dataset = ServiceClass.objects.all()
         serializer = ServiceClassSerializer(dataset, many=True)
-        return Response(serializer.data)
+        # return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = ServiceClassSerializer(data=request.data)
@@ -62,11 +72,11 @@ class ServiceClassDetails(APIView):
 
 #######
 class DedicatedAccountList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = DedicatedAccount.objects.all()
         serializer = DedicatedAccountSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = DedicatedAccountSerializer(data=request.data)
@@ -110,11 +120,11 @@ class DedicatedAccountDetails(APIView):
 #####
 
 class ExceptionListList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = ExceptionList.objects.all()
         serializer = ExceptionListSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = ExceptionListSerializer(data=request.data)
@@ -159,12 +169,12 @@ class ExceptionListDetails(APIView):
 ######
 
 class PrepaidInCdrList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         RevenueCalculator()
         dataset = PrepaidInCdr.objects.all()
         serializer = PrepaidInCdrSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         # Handling the date format from the file
@@ -215,11 +225,11 @@ class PrepaidInCdrDetails(APIView):
 
 ######
 class DaInCdrMapList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = DaInCdrMap.objects.all()
         serializer = DaInCdrMapSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = DaInCdrMapSerializer(data=request.data)
@@ -263,11 +273,11 @@ class DaInCdrMapDetails(APIView):
 ########
 
 class BeepCDRList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = beepCDR.objects.all()
         serializer = beepCDRSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = beepCDRSerializer(data=request.data)
@@ -312,11 +322,11 @@ class BeepCDRDetails(APIView):
 #######
 
 class RevenueConfigList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = RevenueConfig.objects.all()
         serializer = RevenueConfigSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = RevenueConfigSerializer(data=request.data)
@@ -361,11 +371,11 @@ class RevenueConfigDetails(APIView):
 ####
 
 class FreebiesList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = Freebies.objects.all()
         serializer = FreebiesSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = FreebiesSerializer(data=request.data)
@@ -410,11 +420,11 @@ class FreebiesDetails(APIView):
 ###
 
 class FreebiesTypeList(APIView):
-
+    @loadCsv
     def get(self, request, format=None):
         dataset = FreebiesType.objects.all()
         serializer = FreebiesTypeSerializer(dataset, many=True)
-        return Response(serializer.data)
+        return serializer
 
     def post(self, request, format=None):
         serializer = FreebiesTypeSerializer(data=request.data)
