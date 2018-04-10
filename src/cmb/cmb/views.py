@@ -533,14 +533,3 @@ class BulkLoader(APIView):
             return {'status': '0',
                     'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
 
-
-@api_view(['GET', 'POST'])
-def samplepost(request, format=None):
-
-    if request.method == 'GET':
-        return Response({'status': '2'})
-
-    elif request.method == 'POST':
-        print(request.method)
-        return Response({'status': request.data})
-
