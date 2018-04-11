@@ -4,13 +4,15 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .controllers import RevenueCalculator
+from .controllers import RevenueCalculator, generateReport1
 from datetime import datetime
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from . import loader
 from rest_framework.decorators import api_view
 from .decorators import loadCsv
+
+
 def dec(func):
     def wrapper(*args, **kwargs):
         print("Something is happening ")
@@ -542,4 +544,14 @@ class BulkLoader(APIView):
         else:
             return {'status': '0',
                     'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
+
+
+class Report1(APIView):
+
+    def get(self, request):
+        result = generateReport1(request)
+        return Response(result)
+
+
+
 

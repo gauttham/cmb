@@ -62,3 +62,39 @@ WHERE
         pic.callStartTime) <= %s
         AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s
         """
+
+# Queries for reporting functianality
+
+# Report 1
+report1 = """
+select sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party',
+pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge',
+sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share',
+sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage'
+from cmb_serviceclass sc, cmb_prepaidincdr pic
+where pic.serviceClass_id = sc.id
+and callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
+"""
+
+
+
+
+
+# Report 2
+
+
+
+
+
+
+# Report 3
+
+
+
+
+
+
+
+# Report 4
+
+

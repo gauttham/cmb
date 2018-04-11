@@ -70,3 +70,15 @@ def executeCustomSql(sqlstr):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
         ]
+
+
+def generateReport1(request):
+    start = str(request.query_params.get('start'))
+    end = str(request.query_params.get('end'))
+    print(start, end)
+    queryStr = constants.report1 % (start, end)
+    try:
+        data = executeCustomSql(queryStr)
+        return data
+    except Exception as e:
+        print("Some Error Occurred:", e)

@@ -50,6 +50,7 @@ urlpatterns = [
     # url(r'^BulkLoader/$', views.samplepost),
     # url(r'^sample/$', views.DAViewSet.as_view()),
     url(r'^dacsv/$', csvloader.DAViewSet.as_view()),
+    url(r'^reports/report1', views.Report1.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])
