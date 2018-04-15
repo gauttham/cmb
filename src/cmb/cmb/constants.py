@@ -1,3 +1,5 @@
+daCount = 5
+
 is_service_class_valid = "select count(1) from cmb_serviceclass where id in ('{serviceClass}')"
 
 RevenueCalculatorQuery = """
@@ -61,6 +63,7 @@ WHERE
         bc.callStartTime,
         pic.callStartTime) <= %s
         AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s
+        AND oic.subscriberType = 1
         """
 
 # Queries for reporting functianality
@@ -80,16 +83,39 @@ and callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','
 
 
 
-# Report 2
+# Report 2 - Revenue Report
+
+revenueReport = """
+select sum(chargedDuration) as 'Total Calls Duration', sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',
+sum(MICRevenue) as 'MIC1 Revenue Share', sum(revenueShared) * 2 as 'Total Revenue'
+from cmb_prepaidincdr pic
+where callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
+and revenueShared is not null and revenueShared <> ''
+"""
 
 
+# Report 3 - Non Revenue Report
 
-
-
-
-# Report 3
-
-
+nonRevenueReport = """
+select sc.description as 'Service Class', 'InMobiles' as 'Partner Name',
+pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party',
+pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time',
+pic.NCR as 'NCR', pic.reason as 'Failure Reason', bc.MCID as 'MCID', da.product as 'Dedicated Account'
+FROM
+    cmb_prepaidincdr pic,
+    cmb_daincdrmap dim,
+    cmb_serviceclass sc,
+    cmb_dedicatedaccount da,
+    cmb_beepcdr bc
+WHERE
+    pic.id = dim.PrepaidInCdr_id
+        AND da.id = dim.DedicatedAccount
+        AND sc.id = pic.serviceClass_id
+        AND (pic.calledNumber = bc.calledNumber
+        AND pic.callerNumber = bc.callerNumber)
+and pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
+and revenueShared is null
+"""
 
 
 

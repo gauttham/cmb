@@ -12,11 +12,11 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 class ServiceClass(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=50)
-    isRevenueShare = models.BooleanField(default=False)
-    inMobilesPercentage = models.IntegerField(null=True, default=50)
+    isRevenueShare = models.BooleanField(default=False, db_index=True)
+    inMobilesPercentage = models.IntegerField(null=True, default=50, db_index=True)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
-    createdDate = models.DateTimeField(default=timezone.now)
-    updatedDate = models.DateTimeField(auto_now=True)
+    createdDate = models.DateTimeField(default=timezone.now, db_index=True)
+    updatedDate = models.DateTimeField(auto_now=True, db_index=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
@@ -33,8 +33,8 @@ class msisdnType(models.Model):
 
 
 class ExceptionList(models.Model):
-    msisdn = models.CharField(primary_key=True, max_length=20)
-    msisdnType = models.ForeignKey(msisdnType, on_delete=models.CASCADE)
+    msisdn = models.CharField(primary_key=True, max_length=20, db_index=True)
+    msisdnType = models.ForeignKey(msisdnType, on_delete=models.CASCADE, db_index=True)
     createdDate = models.DateTimeField(auto_now_add=True)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
@@ -46,21 +46,23 @@ class ExceptionList(models.Model):
 
 class PrepaidInCdr(models.Model):
     id = models.AutoField(primary_key=True, max_length=20)
-    serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE)
+    serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE, db_index=True)
     accountValueBeforeCall = models.FloatField()
     accountValueAfterCall = models.FloatField()
     callCharge = models.FloatField()
     chargedDuration = models.IntegerField()
-    callStartTime = models.DateTimeField()
+    callStartTime = models.DateTimeField(db_index=True)
     callerNumber = models.CharField(max_length=20)
     calledNumber = models.CharField(max_length=20)
+    NCR = models.CharField(max_length=50, null=True, blank=True)
     subscriberType = models.IntegerField(default=1)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
     gsmCallRefNumber = models.CharField(max_length=20, null=True, blank=True)
     presentationIndicator = models.IntegerField()
     revenueShared = models.FloatField(null=True, blank=True)
+    MICRevenue = models.FloatField(null=True, blank=True)
     reason = models.CharField(max_length=100, blank=True, null=True)
-    createdDate = models.DateTimeField(auto_now_add=True)
+    createdDate = models.DateTimeField(auto_now_add=True, db_index=True)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
@@ -72,7 +74,8 @@ class PrepaidInCdr(models.Model):
 class beepCDR(models.Model):
     calledNumber = models.CharField(max_length=20)
     callerNumber = models.CharField(max_length=20)
-    callStartTime = models.DateTimeField()
+    callStartTime = models.DateTimeField(db_index=True)
+    MCID = models.CharField(max_length=20, null=True, blank=True)
     createdDate = models.DateTimeField(auto_now_add=True)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
@@ -146,4 +149,21 @@ class DaInCdrMap(models.Model):
 
     def __str__(self):
         return '%s: %s: %s: %s' % (self.PrepaidInCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
+
+
+class ScheduleMgr(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    endPoint = models.CharField(max_length=240, blank=True, null=True)
+    nextRunTime = models.DateTimeField()
+    lastRunTime = models.DateTimeField()
+    interval = models.IntegerField()
+    lastReport = models.FileField(upload_to="../reports/", null=True, blank=True)
+    lastRunStatus = models.CharField(max_length=20, default='Successful')
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now_add=True)
+    createdBy = models.CharField(max_length=240, default=settings.DEFAULT_APP_USER)
+    updatedBy = models.CharField(max_length=240, default=settings.DEFAULT_APP_USER)
+
+    def __str__(self):
+        return '%s: %s: %s : %s' % (self.name, self.nextRunTime, self.lastRunStatus, self.interval)
 

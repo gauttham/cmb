@@ -23,8 +23,6 @@ class DAViewSet(APIView):
         response['Content-Disposition'] = 'attachment; filename="BulkExport.csv"'
         serializer = self.get_serializer(DedicatedAccount.objects.all(), many=True)
         header = DedicatedAccountSerializer.Meta.fields
-        print type(header)
-        print(header)
         writer = csv.DictWriter(response, fieldnames=header)
         for row in serializer.data:
             writer.writerow(row)

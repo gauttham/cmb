@@ -25,12 +25,12 @@ schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
 
 
 urlpatterns = [
+    url(r'^login', views.login),
     url(r'^docs/', schema_view),
     url(r'^admin/', admin.site.urls),
     url(r'^DedicatedAccounts/$', views.DedicatedAccountList.as_view()),
     url(r'^DedicatedAccounts/(?P<pk>[0-9]+)/$', views.DedicatedAccountDetails.as_view()),
     url(r'^ServiceClasses/$', views.ServiceClassList.as_view()),
-    url(r'^ServiceClasses/(?P<csv>[0-9a-zA-Z]+)/$', views.ServiceClassList.as_view()),
     url(r'^ServiceClasses/(?P<pk>[0-9]+)/$', views.ServiceClassDetails.as_view()),
     url(r'^ExceptionList/$', views.ExceptionListList.as_view()),
     url(r'^ExceptionList/(?P<pk>[0-9]+)/$', views.ExceptionListDetails.as_view()),
@@ -50,7 +50,9 @@ urlpatterns = [
     # url(r'^BulkLoader/$', views.samplepost),
     # url(r'^sample/$', views.DAViewSet.as_view()),
     url(r'^dacsv/$', csvloader.DAViewSet.as_view()),
-    url(r'^reports/report1', views.Report1.as_view())
+    url(r'^reports/report1', views.Report1.as_view()),
+    url(r'^reports/revenueReport', views.RevenueReport.as_view()),
+    url(r'^reports/nonRevenueReport', views.NoNRevenueReport().as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
 from django.utils import timezone
+from . import constants
 
 
 class ServiceClassSerializer(serializers.ModelSerializer):
@@ -158,7 +159,8 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
                   'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
 
     def get_das_count(self, obj):
-        return obj.dedicatedAccounts.count()
+        return constants.daCount
+        # return obj.dedicatedAccounts.count()
 
     def create(self, validated_data):
         das_data = validated_data.pop('dedicatedAccounts')

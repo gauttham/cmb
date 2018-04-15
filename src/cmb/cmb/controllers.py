@@ -47,6 +47,7 @@ def RevenueCalculator():
                 for da in DaInCdrMap.objects.filter(PrepaidInCdr=row.get('CDRID')):
                     if da.valueBeforeCall > da.valueAfterCall:
                         row['revenueShared'] = row.get('callCharge') * scMetadata.inMobilesPercentage / 100
+                        row['MICRevenue'] = row.get('callCharge') * scMetadata.otherOperatorPercentage / 100
                         serializer = cmbserializers.PrepaidInCdrSerializer(data=row)
                         if serializer.is_valid():
                             serializer.save()
@@ -75,10 +76,32 @@ def executeCustomSql(sqlstr):
 def generateReport1(request):
     start = str(request.query_params.get('start'))
     end = str(request.query_params.get('end'))
-    print(start, end)
     queryStr = constants.report1 % (start, end)
     try:
         data = executeCustomSql(queryStr)
         return data
     except Exception as e:
         print("Some Error Occurred:", e)
+
+
+def generateRevenueReport(request):
+    start = str(request.query_params.get('start'))
+    end = str(request.query_params.get('end'))
+    queryStr = constants.revenueReport % (start, end)
+    try:
+        data = executeCustomSql(queryStr)
+        return data
+    except Exception as e:
+        print("Some Error Occurred:", e)
+
+
+def generateNonRevenueReport(request):
+    start = str(request.query_params.get('start'))
+    end = str(request.query_params.get('end'))
+    queryStr = constants.nonRevenueReport % (start, end)
+    try:
+        data = executeCustomSql(queryStr)
+        return data
+    except Exception as e:
+        print("Some Error Occurred:", e)
+
