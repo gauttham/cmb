@@ -576,6 +576,12 @@ class BulkLoader(APIView):
             except Exception as e:
                 print("Some Error Occurred: ", e)
                 return Response({'status': '0', 'description': str(e)})
+        elif tableName == 'PrepaidInCDR':
+            try:
+                result = loader.loadCdr(userName, filePath)
+                return Response(result)
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
         else:
             return {'status': '0',
                     'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}

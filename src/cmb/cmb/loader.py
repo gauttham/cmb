@@ -1,7 +1,10 @@
-from .models import DedicatedAccount, Freebies, ServiceClass, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, msisdnType
+from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, msisdnType
 import pandas as pd
 from datetime import datetime
 from django.utils import timezone
+from datetime import datetime
+from .constants import incdr_header
+
 
 
 def ReadInitialData():
@@ -128,4 +131,95 @@ def loadServiceClass(userName, filePath):
     except Exception as e:
         print("Some Error Occurred: ", e)
         return False
+
+
+def loadCdr(userName, filePath):
+    interim_df = pd.read_csv(filePath, header=None, names=incdr_header)
+    interim_df['datetime'] = interim_df["date"].map(str) + ' ' + interim_df["time"]
+    df = interim_df.where((pd.notnull(interim_df)), None)
+
+    startTime = timezone.now()
+    error_file = open("cmb/reports/error.txt", "a")
+    initial_count = df['datetime'].count()
+    error_count = 0
+
+    for i, row in df.iterrows():
+        try:
+
+            m = PrepaidInCdr()
+            m.serviceClass = ServiceClass.objects.get(id=str(row['serviceClass']))
+            m.accountValueBeforeCall = row['accountValueBeforeCall']
+            m.accountValueAfterCall = row['accountValueAfterCall']
+            m.callCharge = row['finalChargeofCall']
+            m.chargedDuration = row['chargedDuration']
+            m.callStartTime = datetime.strptime(row['datetime'], '%d/%m/%y %H:%M:%S').strftime(
+                '%Y-%m-%d %H:%M:%S')
+            m.callerNumber = row['callingPartyNumber']
+            m.calledNumber = row['calledPartyNumber']
+            m.subscriberType = 1
+            m.redirectingNumber = row['redirectingNumber']
+            m.gsmCallRefNumber = row['gSMCallReferenceNumber']
+            m.presentationIndicator = row['presentationIndicator']
+            m.createBy = userName
+            m.updatedBy = userName
+            # m.dedicatedAccounts = []
+            try:
+                m.save()
+                if row['dedicatedAccountID1']:
+                    da = DaInCdrMap()
+                    da.PrepaidInCdr = m
+                    da.dedicatedAccount = row['dedicatedAccountID1']
+                    da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall1']
+                    da.valueAfterCall = row['dedicatedAccountValuesAfterCall1']
+                    da.createdBy = userName
+                    da.updatedBy = userName
+                    da.save()
+                if row['dedicatedAccountID2']:
+                    da = DaInCdrMap()
+                    da.PrepaidInCdr = m
+                    da.dedicatedAccount = row['dedicatedAccountID2']
+                    da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall2']
+                    da.valueAfterCall = row['dedicatedAccountValuesAfterCall2']
+                    da.createdBy = userName
+                    da.updatedBy = userName
+                    da.save()
+                if row['dedicatedAccountID3']:
+                    da = DaInCdrMap()
+                    da.PrepaidInCdr = m
+                    da.dedicatedAccount = row['dedicatedAccountID3']
+                    da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall3']
+                    da.valueAfterCall = row['dedicatedAccountValuesAfterCall3']
+                    da.createdBy = userName
+                    da.updatedBy = userName
+                    da.save()
+                if row['dedicatedAccountID4']:
+                    da = DaInCdrMap()
+                    da.PrepaidInCdr = m
+                    da.dedicatedAccount = row['dedicatedAccountID4']
+                    da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall4']
+                    da.valueAfterCall = row['dedicatedAccountValuesAfterCall4']
+                    da.createdBy = userName
+                    da.updatedBy = userName
+                    da.save()
+                if row['dedicatedAccountID5']:
+                    da = DaInCdrMap()
+                    da.PrepaidInCdr = m
+                    da.dedicatedAccount = row['dedicatedAccountID5']
+                    da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall5']
+                    da.valueAfterCall = row['dedicatedAccountValuesAfterCall5']
+                    da.createdBy = userName
+                    da.updatedBy = userName
+                    da.save()
+            except Exception as e:
+                error_count += 1
+                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+
+        except Exception as e:
+            error_count += 1
+            error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+    endTime = timezone.now()
+    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
+
+
+
 
