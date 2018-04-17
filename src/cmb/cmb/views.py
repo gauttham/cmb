@@ -10,24 +10,25 @@ from . import loader
 from .decorators import loadCsv
 
 # Imports for Authentication
-from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
-from rest_framework.authtoken .models import Token
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+# from django.contrib.auth import authenticate
+# from rest_framework.decorators import api_view
+# from rest_framework.authtoken .models import Token
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.authentication import TokenAuthentication
 
 
-@api_view(["POST"])
-def login(request):
-    username = request.data.get("username")
-    password = request.data.get("password")
-
-    user = authenticate(username=username, password=password)
-    if not user:
-        return Response({"error": "Login Failed"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    token, _ = Token.objects.get_or_create(user=user)
-    return Response({"status":"0", "description": "Login Failed"})
+# @api_view(["POST"])
+# def login(request):
+#     import pdb; pdb.set_trace()
+#     username = request.data.get("username")
+#     password = request.data.get("password")
+#
+#     user = authenticate(username=username, password=password)
+#     if not user:
+#         return Response({"error": "Login Failed"}, status=status.HTTP_401_UNAUTHORIZED)
+#
+#     token, _ = Token.objects.get_or_create(user=user)
+#     return Response({"status": "0", "description": "Login Failed"})
 
 
 def dec(func):
@@ -43,8 +44,8 @@ class ServiceClassList(APIView):
     """
     List all Service Classes, or create a new service class
     """
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -66,8 +67,8 @@ class ServiceClassDetails(APIView):
     """
 
     """
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -97,8 +98,8 @@ class ServiceClassDetails(APIView):
 
 #######
 class DedicatedAccountList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -120,8 +121,8 @@ class DedicatedAccountDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -151,8 +152,8 @@ class DedicatedAccountDetails(APIView):
 #####
 
 class ExceptionListList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -174,8 +175,8 @@ class ExceptionListDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -206,8 +207,8 @@ class ExceptionListDetails(APIView):
 ######
 
 class PrepaidInCdrList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -234,8 +235,8 @@ class PrepaidInCdrDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
 
     def get_object(self, id):
@@ -269,8 +270,8 @@ class PrepaidInCdrDetails(APIView):
 
 ######
 class DaInCdrMapList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
 
     @loadCsv
@@ -292,8 +293,8 @@ class DaInCdrMapDetails(APIView):
     """
 
     """
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -324,8 +325,8 @@ class DaInCdrMapDetails(APIView):
 
 class BeepCDRList(APIView):
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -347,8 +348,8 @@ class BeepCDRDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
 
     def get_object(self, id):
@@ -380,8 +381,8 @@ class BeepCDRDetails(APIView):
 #######
 
 class RevenueConfigList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -403,8 +404,8 @@ class RevenueConfigDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -436,8 +437,8 @@ class RevenueConfigDetails(APIView):
 
 class FreebiesList(APIView):
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -459,8 +460,8 @@ class FreebiesDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -491,8 +492,8 @@ class FreebiesDetails(APIView):
 ###
 
 class FreebiesTypeList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -514,8 +515,8 @@ class FreebiesTypeDetails(APIView):
 
     """
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -545,8 +546,8 @@ class FreebiesTypeDetails(APIView):
 
 class BulkLoader(APIView):
 
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         userName = request.GET.get('userName')

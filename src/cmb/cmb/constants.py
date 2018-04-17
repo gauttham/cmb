@@ -66,7 +66,7 @@ WHERE
         bc.callStartTime,
         pic.callStartTime) <= %s
         AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s
-        AND oic.subscriberType = 1
+        AND pic.subscriberType = 1
         """
 
 # Queries for reporting functianality
