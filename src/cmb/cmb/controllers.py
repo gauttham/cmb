@@ -77,6 +77,9 @@ def generateReport1(request):
     start = str(request.query_params.get('start'))
     end = str(request.query_params.get('end'))
     queryStr = constants.report1 % (start, end)
+    print ("querystr is : ", queryStr)
+
+
     try:
         data = executeCustomSql(queryStr)
         return data
@@ -87,7 +90,16 @@ def generateReport1(request):
 def generateRevenueReport(request):
     start = str(request.query_params.get('start'))
     end = str(request.query_params.get('end'))
-    queryStr = constants.revenueReport % (start, end)
+    aggregation = str(request.query_params.get("timeType"))
+    if aggregation == 'Hourly':
+        aggstr = '%Y-%m-%d %H'
+    elif aggregation == 'Daily':
+        aggstr = '%Y-%m-%d'
+    elif aggregation == 'Monthly':
+        aggstr = '%Y-%m'
+    else:
+        aggstr = '%Y'
+    queryStr = constants.revenueReport % (aggstr, start, end, aggstr)
     try:
         data = executeCustomSql(queryStr)
         return data

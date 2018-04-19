@@ -2,7 +2,8 @@ import csv
 from django.http import HttpResponse
 from rest_framework.response import Response
 from collections import OrderedDict
-
+from . import settings
+from django.utils import timezone
 
 def loadCsv(func):
 
@@ -19,9 +20,15 @@ def loadCsv(func):
             writer = csv.DictWriter(response, fieldnames=header)
             writer.writeheader()
 
-            for row in resultserializer.data:
-                writer.writerow(row)
-            return response
+            if request.query_params.get('reportType') == 'Generate':
+                pass
+            else:
+                for row in resultserializer.data:
+                    writer.writerow(row)
+
+                print(response)
+                print(type(response))
+                return response
 
         else:
             resultserializer = func(*args, **kwargs)

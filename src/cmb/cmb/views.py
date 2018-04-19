@@ -583,6 +583,18 @@ class BulkLoader(APIView):
                 return Response(result)
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
+        elif tableName == 'postCdr':
+            try:
+                result = loader.loadPostCdr(userName, filePath)
+                return Response(result)
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
+        elif tableName == 'beepCdr':
+            try:
+                result = loader.loadBeepCDR(userName, filePath)
+                return Response(result)
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
         else:
             return {'status': '0',
                     'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
@@ -618,6 +630,19 @@ class BulkLoader(APIView):
         elif tableName == 'PrepaidInCDR':
             try:
                 result = loader.loadCdr(userName, filePath)
+                return Response(result)
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
+
+        elif tableName == 'postCdr':
+            try:
+                result = loader.loadPostCdr(userName, filePath)
+                return Response(result)
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
+        elif tableName == 'beepCdr':
+            try:
+                result = loader.loadBeepCDR(userName, filePath)
                 return Response(result)
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})

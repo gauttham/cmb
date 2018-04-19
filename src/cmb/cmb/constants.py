@@ -1,6 +1,7 @@
 daCount = 5
 
 incdr_header = ['dwhIdentifier', 'chargePartyDistributed', 'chargePartySingle', 'chargingUnitsAddition', 'trafficCase', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'dedicatedAccountID1', 'dedicatedAccountValuesBeforeCall1', 'dedicatedAccountValuesAfterCall1', 'dedicatedAccountID2', 'dedicatedAccountValuesBeforeCall2', 'dedicatedAccountValuesAfterCall2', 'dedicatedAccountID3', 'dedicatedAccountValuesBeforeCall3', 'dedicatedAccountValuesAfterCall3', 'dedicatedAccountID4', 'dedicatedAccountValuesBeforeCall4', 'dedicatedAccountValuesAfterCall4', 'dedicatedAccountID5', 'dedicatedAccountValuesBeforeCall5', 'dedicatedAccountValuesAfterCall5', 'finalChargeofCall', 'chargedDuration', 'cDRType', 'teleserviceCode', 'subscriberNumber', 'date', 'time', 'faFIndicator', 'numberOfSDPInterrogations', 'subscriptionType', 'regionChargingOrigin', 'triggerTime', 'originatingLocationInformation', 'callingPartyNumber', 'calledPartyNumber', 'redirectingNumber', 'accountNumber', 'terminatingLocationInformation', 'calledPartyNumber2', 'calledPartyNumber3', 'deviceID', 'gSMCallReferenceNumber', 'serviceOfferings', 'accountGroup', 'filenameSequence', 'accumulatorID1', 'accumulatorID2', 'accumulatorID3', 'accumulatorID4', 'accumulatorID5', 'accumulatorValue1  ', 'accumulatorValue2  ', 'accumulatorValue3  ', 'accumulatorValue4  ', 'accumulatorValue5  ', 'presentationIndicator']
+postcdr_header = ['Network Call Reference', 'A', 'B', 'date', 'time', 'Duration', 'Total Charged']
 
 
 is_service_class_valid = "select count(1) from cmb_serviceclass where id in ('{serviceClass}')"
@@ -90,10 +91,11 @@ and callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','
 
 revenueReport = """
 select sum(chargedDuration) as 'Total Calls Duration', sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',
-sum(MICRevenue) as 'MIC1 Revenue Share', sum(revenueShared) * 2 as 'Total Revenue'
+sum(MICRevenue) as 'MIC1 Revenue Share', sum(revenueShared) * 2 as 'Total Revenue', date_format(str_to_date(pic.callStartTime, '%s'), '%%Y-%%m-%%d %%H') as 'Time'
 from cmb_prepaidincdr pic
 where callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
 and revenueShared is not null and revenueShared <> ''
+group by date_format(str_to_date(pic.callStartTime, '%s'), '%%Y-%%m-%%d %%H')
 """
 
 

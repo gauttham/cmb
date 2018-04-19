@@ -3,8 +3,8 @@ import pandas as pd
 from datetime import datetime
 from django.utils import timezone
 from datetime import datetime
-from .constants import incdr_header
-
+from .constants import incdr_header, postcdr_header
+from rest_framework.response import Response
 
 
 def ReadInitialData():
@@ -218,8 +218,85 @@ def loadCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
-    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
+    return Response({"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
+                     "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count})
 
 
+def loadPostCdr(userName, filePath):
+    sc = ServiceClass(id=9999)
+    sc.description = "Postpaid dummy service class"
+    sc.isRevenueShare = True
+    sc.inMobilesPercentage = 50
+    sc.otherOperatorPercentage = 100 - sc.inMobilesPercentage
+    sc.createdBy = userName
+    sc.updatedBy = userName
+    sc.save()
+
+    interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
+    interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
+    df = interimpost_df.where((pd.notnull(interimpost_df)), None)
+
+    startTime = timezone.now()
+    error_file = open("cmb/reports/postpaiderror.txt", "a")
+    initial_count = df['datetime'].count()
+    error_count = 0
+
+    for i, row in df.iterrows():
+        try:
+            m = PrepaidInCdr()
+            m.serviceClass = ServiceClass.objects.get(id=9999)
+            m.gsmCallRefNumber = row['Network Call Reference']
+            m.callerNumber = row['A']
+            m.calledNumber = row['B']
+            m.callStartTime = datetime.strptime(row['datetime'], '%d/%m/%y %H:%M:%S').strftime(
+            '%Y-%m-%d %H:%M:%S')
+            m.chargedDuration = row['Duration']
+            m.callCharge = row['Total Charged']
+            m.createdBy = userName
+            m.updatedBy = userName
+            try:
+                m.save()
+            except Exception as e:
+                print(e)
+                error_count += 1
+                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+        except Exception as e:
+            error_count += 1
+            error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+    endTime = timezone.now()
+    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
+            "initialCount": initial_count, "errorCount": error_count}
 
 
+# Loading beep CDR File
+def loadBeepCdr(userName, filePath):
+    interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
+    # interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
+    df = interimpost_df.where((pd.notnull(interimpost_df)), None)
+
+    startTime = timezone.now()
+    error_file = open("cmb/reports/beeperror.txt", "a")
+    initial_count = df['datetime'].count()
+    error_count = 0
+
+    for i, row in df.iterrows():
+        try:
+            m = beepCDR()
+            m.callerNumber = row['caller']
+            m.calledNumber = row['called']
+            m.callStartTime = row['datetime']
+            m.MCID = row['MCID']
+            m.updatedBy = userName
+            m.createdBy = userName
+            try:
+                m.save()
+            except Exception as e:
+                print(e)
+                error_count += 1
+                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+        except Exception as e:
+            error_count += 1
+            error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+    endTime = timezone.now()
+    return Response({"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
+            "initialCount": initial_count, "errorCount": error_count})

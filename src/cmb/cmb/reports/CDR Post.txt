@@ -1,0 +1,6 @@
+Network Call Reference	97FE3D0000
+A	96132019284
+B 	96170430000
+Date time 	27/12/17,22:50:43
+Duration 	124
+Total Charged 	0 or  >0

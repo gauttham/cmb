@@ -2,6 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from . import models
+import django_celery_beat
 
 # For CMB
 
@@ -16,3 +17,8 @@ admin.site.register(models.FreebiesType)
 admin.site.register(models.Freebies)
 admin.site.register(models.msisdnType)
 admin.site.register(models.ScheduleMgr)
+
+
+#####
+
+# admin.site.register(django_celery_beat.models.CrontabSchedule)

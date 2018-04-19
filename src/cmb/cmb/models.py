@@ -47,8 +47,8 @@ class ExceptionList(models.Model):
 class PrepaidInCdr(models.Model):
     id = models.AutoField(primary_key=True, max_length=20)
     serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE, db_index=True)
-    accountValueBeforeCall = models.FloatField()
-    accountValueAfterCall = models.FloatField()
+    accountValueBeforeCall = models.FloatField(null=True)
+    accountValueAfterCall = models.FloatField(null=True)
     callCharge = models.FloatField()
     chargedDuration = models.IntegerField()
     callStartTime = models.DateTimeField(db_index=True)
@@ -58,7 +58,7 @@ class PrepaidInCdr(models.Model):
     subscriberType = models.IntegerField(default=1)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
     gsmCallRefNumber = models.CharField(max_length=20, null=True, blank=True)
-    presentationIndicator = models.IntegerField()
+    presentationIndicator = models.IntegerField(null=True)
     revenueShared = models.FloatField(null=True, blank=True)
     MICRevenue = models.FloatField(null=True, blank=True)
     reason = models.CharField(max_length=100, blank=True, null=True)
@@ -166,4 +166,11 @@ class ScheduleMgr(models.Model):
 
     def __str__(self):
         return '%s: %s: %s : %s' % (self.name, self.nextRunTime, self.lastRunStatus, self.interval)
+
+class testModel(models.Model):
+    name = models.CharField(max_length=10, default='gautam')
+
+    def __str__(self):
+        return '%s' % self.name
+
 
