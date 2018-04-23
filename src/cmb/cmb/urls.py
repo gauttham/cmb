@@ -34,8 +34,8 @@ urlpatterns = [
     url(r'^ServiceClasses/(?P<pk>[0-9]+)/$', views.ServiceClassDetails.as_view()),
     url(r'^ExceptionList/$', views.ExceptionListList.as_view()),
     url(r'^ExceptionList/(?P<pk>[0-9]+)/$', views.ExceptionListDetails.as_view()),
-    url(r'^PrepaidInCdr/$', views.PrepaidInCdrList.as_view()),
-    url(r'^PrepaidInCdr/(?P<pk>[0-9a-zA-Z]+)/$', views.PrepaidInCdrDetails.as_view()),
+    url(r'^PrepaidInCdr/$', views.InCdrList.as_view()),
+    url(r'^PrepaidInCdr/(?P<pk>[0-9a-zA-Z]+)/$', views.InCdrDetails.as_view()),
     url(r'^DaInCdrMap/$', views.DaInCdrMapList.as_view()),
     url(r'^DaInCdrMap/(?P<pk>[0-9]+)/$', views.DaInCdrMapDetails.as_view()),
     url(r'^beepCDR/$', views.BeepCDRList.as_view()),
@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^reports/report1', views.Report1.as_view()),
     url(r'^reports/revenueReport', views.RevenueReport.as_view()),
     url(r'^reports/nonRevenueReport', views.NoNRevenueReport().as_view()),
+    url(r'^reports/stats1', views.Stats1().as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])

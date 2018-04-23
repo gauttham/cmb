@@ -1,4 +1,4 @@
-from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, msisdnType
+from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, InCdr, DaInCdrMap, beepCDR, msisdnType
 import pandas as pd
 from datetime import datetime
 from django.utils import timezone
@@ -28,7 +28,7 @@ def loadInitialData():
 def loadPrepaidInCrd(ppincdr):
     try:
         for row in ppincdr.iterrows():
-            m = PrepaidInCdr(id=row[1]['Datastructure'])
+            m = InCdr(id=row[1]['Datastructure'])
             try:
                 serviceClass = ServiceClass.objects.get(id=row[1]['serviceClass'])
             except ServiceClass.DoesNotExist:
@@ -146,7 +146,7 @@ def loadCdr(userName, filePath):
     for i, row in df.iterrows():
         try:
 
-            m = PrepaidInCdr()
+            m = InCdr()
             m.serviceClass = ServiceClass.objects.get(id=str(row['serviceClass']))
             m.accountValueBeforeCall = row['accountValueBeforeCall']
             m.accountValueAfterCall = row['accountValueAfterCall']
@@ -167,7 +167,7 @@ def loadCdr(userName, filePath):
                 m.save()
                 if row['dedicatedAccountID1']:
                     da = DaInCdrMap()
-                    da.PrepaidInCdr = m
+                    da.InCdr = m
                     da.dedicatedAccount = row['dedicatedAccountID1']
                     da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall1']
                     da.valueAfterCall = row['dedicatedAccountValuesAfterCall1']
@@ -176,7 +176,7 @@ def loadCdr(userName, filePath):
                     da.save()
                 if row['dedicatedAccountID2']:
                     da = DaInCdrMap()
-                    da.PrepaidInCdr = m
+                    da.InCdr = m
                     da.dedicatedAccount = row['dedicatedAccountID2']
                     da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall2']
                     da.valueAfterCall = row['dedicatedAccountValuesAfterCall2']
@@ -185,7 +185,7 @@ def loadCdr(userName, filePath):
                     da.save()
                 if row['dedicatedAccountID3']:
                     da = DaInCdrMap()
-                    da.PrepaidInCdr = m
+                    da.InCdr = m
                     da.dedicatedAccount = row['dedicatedAccountID3']
                     da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall3']
                     da.valueAfterCall = row['dedicatedAccountValuesAfterCall3']
@@ -194,7 +194,7 @@ def loadCdr(userName, filePath):
                     da.save()
                 if row['dedicatedAccountID4']:
                     da = DaInCdrMap()
-                    da.PrepaidInCdr = m
+                    da.InCdr = m
                     da.dedicatedAccount = row['dedicatedAccountID4']
                     da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall4']
                     da.valueAfterCall = row['dedicatedAccountValuesAfterCall4']
@@ -203,7 +203,7 @@ def loadCdr(userName, filePath):
                     da.save()
                 if row['dedicatedAccountID5']:
                     da = DaInCdrMap()
-                    da.PrepaidInCdr = m
+                    da.InCdr = m
                     da.dedicatedAccount = row['dedicatedAccountID5']
                     da.valueBeforeCall = row['dedicatedAccountValuesBeforeCall5']
                     da.valueAfterCall = row['dedicatedAccountValuesAfterCall5']
@@ -243,7 +243,7 @@ def loadPostCdr(userName, filePath):
 
     for i, row in df.iterrows():
         try:
-            m = PrepaidInCdr()
+            m = InCdr()
             m.serviceClass = ServiceClass.objects.get(id=9999)
             m.gsmCallRefNumber = row['Network Call Reference']
             m.callerNumber = row['A']

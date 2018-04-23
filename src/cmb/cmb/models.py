@@ -44,7 +44,7 @@ class ExceptionList(models.Model):
         return '%s: %s' % (self.msisdn, self.msisdnType)
 
 
-class PrepaidInCdr(models.Model):
+class InCdr(models.Model):
     id = models.AutoField(primary_key=True, max_length=20)
     serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE, db_index=True)
     accountValueBeforeCall = models.FloatField(null=True)
@@ -138,7 +138,7 @@ class DedicatedAccount(models.Model):
 
 
 class DaInCdrMap(models.Model):
-    PrepaidInCdr = models.ForeignKey(PrepaidInCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts')
+    InCdr = models.ForeignKey(InCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts')
     dedicatedAccount = models.IntegerField(null=True, blank=True)
     valueBeforeCall = models.FloatField(null=True, blank=True)
     valueAfterCall = models.FloatField(null=True, blank=True)
@@ -148,7 +148,7 @@ class DaInCdrMap(models.Model):
     updatedBy = models.CharField(max_length=100, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
-        return '%s: %s: %s: %s' % (self.PrepaidInCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
+        return '%s: %s: %s: %s' % (self.InCdr, self.DedicatedAccount, self.valueBeforeCall, self.valueAfterCall)
 
 
 class ScheduleMgr(models.Model):

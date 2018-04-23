@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
 from django.utils import timezone
 from . import constants
 
@@ -101,7 +101,7 @@ class DaInCdrMapSerializer(serializers.ModelSerializer):
             return {'status': '0'}
 
     def update(self, instance, validated_data):
-        instance.PrepaidInCdr = validated_data.get('PrepaidInCdr', instance.PrepaidInCdr)
+        instance.InCdr = validated_data.get('InCdr', instance.InCdr)
         instance.dedicatedAccount = validated_data.get('dedicatedAccount', instance.dedicatedAccount)
         instance.valueBeforeCall = validated_data.get('valueBeforeCall', instance.valueBeforeCall)
         instance.valueAfterCall = validated_data.get('valueAfterCall', instance.valueAfterCall)
@@ -128,7 +128,7 @@ class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
             return {'status': '0'}
 
     def update(self, instance, validated_data):
-        instance.PrepaidInCdr = validated_data.get('PrepaidInCdr', instance.PrepaidInCdr)
+        instance.InCdr = validated_data.get('InCdr', instance.InCdr)
         instance.dedicatedAccount = validated_data.get('dedicatedAccount', instance.dedicatedAccount)
         instance.valueBeforeCall = validated_data.get('valueBeforeCall', instance.valueBeforeCall)
         instance.valueAfterCall = validated_data.get('valueAfterCall', instance.valueAfterCall)
@@ -144,7 +144,7 @@ class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
         fields = ('daId', 'valueBeforeCall', 'valueAfterCall')
 
 
-class PrepaidInCdrSerializer(serializers.ModelSerializer):
+class InCdrSerializer(serializers.ModelSerializer):
     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
@@ -152,7 +152,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     daCount = serializers.SerializerMethodField('get_das_count')
 
     class Meta:
-        model = PrepaidInCdr
+        model = InCdr
         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'subscriberType', 'redirectingNumber',
                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
@@ -165,9 +165,9 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         das_data = validated_data.pop('dedicatedAccounts')
         validated_data['serviceClass']
-        inCdr = PrepaidInCdr.objects.create(**validated_data)
+        inCdr = InCdr.objects.create(**validated_data)
         for da_data in das_data:
-            DaInCdrMap.objects.create(PrepaidInCdr=inCdr, **da_data)
+            DaInCdrMap.objects.create(InCdr=inCdr, **da_data)
         return {'status': 'Success'}
 
     def update(self, instance, validated_data):
@@ -192,7 +192,7 @@ class PrepaidInCdrSerializer(serializers.ModelSerializer):
 
         for da_data in das_data:
             da = das.pop(0)
-            da.PrepaidInCdr = PrepaidInCdr.objects.get(pk=instance.pk)
+            da.InCdr = InCdr.objects.get(pk=instance.pk)
             da.valueBeforeCall = da_data.get('valueBeforeCall', da.valueBeforeCall)
             da.save()
 

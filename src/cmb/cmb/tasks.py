@@ -1,9 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 import random
 from celery.task import task, periodic_task
-import datetime
 from .models import testModel
-
+import requests
+from datetime import timedelta, datetime
 
 @task(name="sum_two_numbers")
 def add(x, y):
@@ -39,6 +39,19 @@ def insertTest():
     m.name='gautam'
     m.save()
     return True
+
+
+@task(name='generate_daily_stats1')
+def generate_weekly_stats1():
+    start = (datetime.now() - timedelta(days=7)).strftime(
+                '%Y-%m-%d %H')
+    end = datetime.now().strftime('%Y-%M-%d %H')
+    reportType="Daily"
+    url = "http://localhost:8000/reports/stats1/?start=%s&end=%s&reportType=%s" %(start, end, reportType)
+    resp = requests.get(url)
+    return resp
+
+
 
 
 

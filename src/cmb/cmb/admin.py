@@ -9,7 +9,7 @@ import django_celery_beat
 admin.site.register(models.ServiceClass)
 admin.site.register(models.DedicatedAccount)
 admin.site.register(models.ExceptionList)
-admin.site.register(models.PrepaidInCdr)
+admin.site.register(models.InCdr)
 admin.site.register(models.DaInCdrMap)
 admin.site.register(models.beepCDR)
 admin.site.register(models.RevenueConfig)

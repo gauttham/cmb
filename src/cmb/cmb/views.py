@@ -1,10 +1,10 @@
-from .models import  ServiceClass, DedicatedAccount, ExceptionList, PrepaidInCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
-from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, PrepaidInCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer
+from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .controllers import RevenueCalculator, generateReport1, generateRevenueReport, generateNonRevenueReport
+from .controllers import RevenueCalculator, generateReport1, generateRevenueReport, generateNonRevenueReport, generateStats1
 from datetime import datetime
 from . import loader
 from .decorators import loadCsv
@@ -206,15 +206,15 @@ class ExceptionListDetails(APIView):
 
 ######
 
-class PrepaidInCdrList(APIView):
+class InCdrList(APIView):
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
         RevenueCalculator()
-        dataset = PrepaidInCdr.objects.all()
-        serializer = PrepaidInCdrSerializer(dataset, many=True)
+        dataset = InCdr.objects.all()
+        serializer = InCdrSerializer(dataset, many=True)
         return serializer
 
     def post(self, request, format=None):
@@ -222,7 +222,7 @@ class PrepaidInCdrList(APIView):
         callStartTime = request.data.get('callStartTime')
         request.data['callStartTime'] = datetime.strptime(callStartTime, '%d/%m/%y %H:%M:%S').strftime(
             '%Y-%m-%d %H:%M:%S')
-        serializer = PrepaidInCdrSerializer(data=request.data)
+        serializer = InCdrSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
@@ -230,7 +230,7 @@ class PrepaidInCdrList(APIView):
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PrepaidInCdrDetails(APIView):
+class InCdrDetails(APIView):
     """
 
     """
@@ -241,13 +241,13 @@ class PrepaidInCdrDetails(APIView):
 
     def get_object(self, id):
         try:
-            return PrepaidInCdr.objects.get(pk=id)
+            return InCdr.objects.get(pk=id)
         except ServiceClass.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         dataset = self.get_object(pk)
-        serializer = PrepaidInCdrSerializer(dataset)
+        serializer = InCdrSerializer(dataset)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -255,7 +255,7 @@ class PrepaidInCdrDetails(APIView):
         callStartTime = request.data.get('callStartTime')
         request.data['callStartTime'] = datetime.strptime(callStartTime, '%d/%m/%y %H:%M:%S').strftime(
             '%Y-%m-%d %H:%M:%S')
-        serializer = PrepaidInCdrSerializer(dataset, data=request.data)
+        serializer = InCdrSerializer(dataset, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'status': '1'})
@@ -655,19 +655,37 @@ class Report1(APIView):
 
     @loadCsv
     def get(self, request):
-        result = generateReport1(request)
+        start = str(request.query_params.get('start'))
+        end = str(request.query_params.get('end'))
+        result = generateReport1(start, end)
         return Response(result)
 
 
 class RevenueReport(APIView):
     @loadCsv
     def get(self, request):
-        result = generateRevenueReport(request)
+        start = str(request.query_params.get('start'))
+        end = str(request.query_params.get('end'))
+        aggregation = str(request.query_params.get("timeType"))
+        result = generateRevenueReport(start, end, aggregation)
         return Response(result)
 
 
 class NoNRevenueReport(APIView):
     @loadCsv
     def get(self, request):
-        result = generateNonRevenueReport(request)
+        start = str(request.query_params.get('start'))
+        end = str(request.query_params.get('end'))
+        result = generateNonRevenueReport(start, end)
         return Response(result)
+
+
+class Stats1(APIView):
+    @loadCsv
+    def get(self, request):
+        start = str(request.query_params.get('start'))
+        end = str(request.query_params.get('end'))
+        result = generateStats1(start, end)
+        return Response(result)
+
+
