@@ -596,8 +596,9 @@ class BulkLoader(APIView):
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         else:
-            return {'status': '0',
-                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'}
+            return Response({'status': '0',
+                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, '
+                                   'exceptionList, PrepaidInCDR, beepCdr, postCdr' })
 
     def post(self, request):
         userName = request.data.get('userName')

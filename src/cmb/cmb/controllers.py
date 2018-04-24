@@ -31,6 +31,18 @@ def RevenueCalculator():
     revenueConfig = getRevenueConfig()
     queryStr = RevenueCalculatorQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
     postpaidQueryStr = postpaidRevenueQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
+
+    try:
+        for row in executeCustomSql(postpaidQueryStr):
+            row['revenueShared'] = row.get('callCharge') / 2
+            row['MICRevenue'] = row.get('callCharge') / 2
+            serializer = cmbserializers.InCdrSerializer(data=row)
+            if serializer.is_valid():
+                serializer.save()
+    except Exception as e:
+        print("Some Error Occurred")
+        return False
+
     try:
         for row in executeCustomSql(queryStr):
 

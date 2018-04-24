@@ -1,4 +1,4 @@
-from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, InCdr, DaInCdrMap, beepCDR, msisdnType
+from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, InCdr, DaInCdrMap, beepCDR, msisdnType, BulkLoadHistory, BulkLoadFailedList
 import pandas as pd
 from datetime import datetime
 from django.utils import timezone
@@ -25,7 +25,7 @@ def loadInitialData():
         print("Some Error Occurred:", e)
 
 
-def loadPrepaidInCrd(ppincdr):
+def loadPrepaidInCdr(ppincdr):
     try:
         for row in ppincdr.iterrows():
             m = InCdr(id=row[1]['Datastructure'])
@@ -134,14 +134,20 @@ def loadServiceClass(userName, filePath):
 
 
 def loadCdr(userName, filePath):
+    import pdb; pdb.set_trace()
     interim_df = pd.read_csv(filePath, header=None, names=incdr_header)
     interim_df['datetime'] = interim_df["date"].map(str) + ' ' + interim_df["time"]
     df = interim_df.where((pd.notnull(interim_df)), None)
+    b = BulkLoadHistory()
 
     startTime = timezone.now()
     error_file = open("cmb/reports/error.txt", "a")
     initial_count = df['datetime'].count()
     error_count = 0
+    b.start = startTime
+    b.initialCount = initial_count
+    b.uploadedBy = userName
+    b.save()
 
     for i, row in df.iterrows():
         try:
@@ -218,8 +224,8 @@ def loadCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
-    return Response({"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
-                     "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count})
+    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
+                     "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
 
 
 def loadPostCdr(userName, filePath):
@@ -298,5 +304,5 @@ def loadBeepCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
-    return Response({"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
-            "initialCount": initial_count, "errorCount": error_count})
+    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
+            "initialCount": initial_count, "errorCount": error_count}

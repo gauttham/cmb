@@ -4,6 +4,7 @@ from celery.task import task, periodic_task
 from .models import testModel
 import requests
 from datetime import timedelta, datetime
+from .controllers import RevenueCalculator
 
 @task(name="sum_two_numbers")
 def add(x, y):
@@ -53,6 +54,8 @@ def generate_weekly_stats1():
 
 
 
-
-
+@task(name='RevenueCalculator')
+def RevenueCalculatorTask():
+    RevenueCalculator()
+    return True
 

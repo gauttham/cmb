@@ -174,3 +174,21 @@ class testModel(models.Model):
         return '%s' % self.name
 
 
+class BulkLoadHistory(models.Model):
+    type = models.CharField(max_length=50)
+    initialCount = models.IntegerField()
+    errorCount = models.IntegerField(null=True)
+    start = models.DateTimeField()
+    end = models.DateTimeField(null=True, blank=True)
+    uploadedBy = models.CharField(max_length=50)
+
+    def __str__(self):
+        return '%s; %s' % (self.type, self.uploadedBy)
+
+
+class BulkLoadFailedList(models.Model):
+    BulkLoadHistory = models.ForeignKey(BulkLoadHistory, on_delete=models.CASCADE)
+    cdr = models.TextField()
+    createdDate = models.DateTimeField(default=timezone.now)
+    uploadedBy = models.CharField(max_length=50)
+
