@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 from django.utils import timezone
 from datetime import datetime
-from .constants import incdr_header, postcdr_header
+from .constants import incdr_header, postcdr_header, beepcdr_header
 from rest_framework.response import Response
 
 
@@ -51,19 +51,6 @@ def loadPrepaidInCdr(ppincdr):
             except ValueError as e:
                 print(e)
                 print(row)
-    except Exception as e:
-        print("Some Error Occurred:", e)
-
-
-def loadBeepCDR(beep_cdr):
-    try:
-        for row in beep_cdr.iterrows():
-            m = beepCDR(calledNumber=row[1]['calledPartyNumber'], callerNumber=row[1]['callingPartyNumber'],
-                        callStartTime=row[1]['Add Time'], createdDate=timezone.now(), updatedDate=timezone.now())
-            try:
-                m.save()
-            except Exception as e:
-                print("Some Error Occurred:", e)
     except Exception as e:
         print("Some Error Occurred:", e)
 
@@ -224,6 +211,9 @@ def loadCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
+    b.endTime = endTime
+    b.errorCount = error_count
+    b.save()
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
                      "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
 
@@ -241,11 +231,16 @@ def loadPostCdr(userName, filePath):
     interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
     interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
     df = interimpost_df.where((pd.notnull(interimpost_df)), None)
+    b = BulkLoadHistory()
 
     startTime = timezone.now()
     error_file = open("cmb/reports/postpaiderror.txt", "a")
     initial_count = df['datetime'].count()
     error_count = 0
+    b.start = startTime
+    b.initialCount = initial_count
+    b.uploadedBy = userName
+    b.save()
 
     for i, row in df.iterrows():
         try:
@@ -270,28 +265,35 @@ def loadPostCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
+    b.endTime = endTime
+    b.errorCount = error_count
+    b.save()
+
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
             "initialCount": initial_count, "errorCount": error_count}
 
 
-# Loading beep CDR File
+# Bulk Loading beep CDR File
 def loadBeepCdr(userName, filePath):
-    interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
+    interimpost_df = pd.read_csv(filePath, header=None, names=beepcdr_header)
     # interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
     df = interimpost_df.where((pd.notnull(interimpost_df)), None)
-
+    b = BulkLoadHistory()
     startTime = timezone.now()
     error_file = open("cmb/reports/beeperror.txt", "a")
-    initial_count = df['datetime'].count()
+    initial_count = df['dateTime'].count()
     error_count = 0
-
+    b.start = startTime
+    b.initialCount = initial_count
+    b.uploadedBy = userName
+    b.save()
     for i, row in df.iterrows():
         try:
             m = beepCDR()
-            m.callerNumber = row['caller']
-            m.calledNumber = row['called']
-            m.callStartTime = row['datetime']
-            m.MCID = row['MCID']
+            m.callerNumber = row['A']
+            m.calledNumber = row['B']
+            m.callStartTime = row['dateTime']
+            m.MCID = row['id']
             m.updatedBy = userName
             m.createdBy = userName
             try:
@@ -304,5 +306,8 @@ def loadBeepCdr(userName, filePath):
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
     endTime = timezone.now()
+    b.endTime = endTime
+    b.errorCount = error_count
+    b.save()
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
             "initialCount": initial_count, "errorCount": error_count}
