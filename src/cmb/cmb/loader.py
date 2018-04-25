@@ -121,7 +121,6 @@ def loadServiceClass(userName, filePath):
 
 
 def loadCdr(userName, filePath):
-    import pdb; pdb.set_trace()
     interim_df = pd.read_csv(filePath, header=None, names=incdr_header)
     interim_df['datetime'] = interim_df["date"].map(str) + ' ' + interim_df["time"]
     df = interim_df.where((pd.notnull(interim_df)), None)
