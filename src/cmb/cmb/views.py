@@ -691,11 +691,12 @@ class Stats1(APIView):
 
 
 class ExecuteRevenueCalculator(APIView):
-    def get(self):
+
+    def get(self, request):
         try:
             RevenueCalculator()
-            return Response({"status":"1", "description":"Revenue calculation completed"})
+            return Response({"status": "1", "description": "Revenue calculation completed"})
         except Exception as e:
-            return Response({"status":"0", "description":str(e)})
+            return Response({"status": "0", "description": str(e)})
 
 

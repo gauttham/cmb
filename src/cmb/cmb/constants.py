@@ -74,19 +74,20 @@ WHERE
 
 postpaidRevenueQuery = """
 SELECT
-    pic.id AS 'CDRID',
-    pic.callCharge,
-    pic.callerNumber,
-    pic.calledNumber,
-    pic.callStartTime AS 'pic_starttime',
+    a.id AS 'CDRID',
+    a.callCharge,
+    a.callerNumber,
+    a.calledNumber,
+    a.callStartTime AS 'pic_starttime',
     (callCharge * inMobilesPercentage / 100) revenue
-    from cmb_incdr a, cmb_beepcdr b
-    where (a.calledNumber = b.callerNumber and a.callerNumber = b.calledNumber);
+    from cmb_incdr a, cmb_beepcdr b, cmb_serviceclass c
+    where (a.calledNumber = b.callerNumber and a.callerNumber = b.calledNumber)
+    and a.serviceClass_id = c.id
     and TIMESTAMPDIFF(MINUTE,
-        bc.callStartTime,
-        pic.callStartTime) <= %s
-        AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s
-        and pic.subscriberType = 2
+        b.callStartTime,
+        a.callStartTime) <= %s
+        AND DATEDIFF(SYSDATE(), b.createdDate) <= %s
+        and a.subscriberType = 2
 
 
 """

@@ -40,7 +40,7 @@ def RevenueCalculator():
             if serializer.is_valid():
                 serializer.save()
     except Exception as e:
-        print("Some Error Occurred")
+        print("Some Error Occurred", e)
         return False
 
     try:
