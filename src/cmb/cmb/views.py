@@ -591,7 +591,7 @@ class BulkLoader(APIView):
                 return Response({"status": "0", "description": str(e)})
         elif tableName == 'beepCdr':
             try:
-                result = loader.loadBeepCDR(userName, filePath)
+                result = loader.loadBeepCdr(userName, filePath)
                 return Response(result)
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
