@@ -134,6 +134,7 @@ def loadCdr(userName, filePath):
     b.start = startTime
     b.initialCount = initial_count
     b.uploadedBy = userName
+    b.status = 'InProgress'
     b.save()
 
     for i, row in df.iterrows():
@@ -218,6 +219,7 @@ def loadCdr(userName, filePath):
     endTime = timezone.now()
     b.endTime = endTime
     b.errorCount = error_count
+    b.status = 'Complete'
     b.save()
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
                      "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
@@ -245,6 +247,7 @@ def loadPostCdr(userName, filePath):
     b.start = startTime
     b.initialCount = initial_count
     b.uploadedBy = userName
+    b.status = 'InProgress'
     b.save()
 
     for i, row in df.iterrows():
@@ -278,6 +281,7 @@ def loadPostCdr(userName, filePath):
     endTime = timezone.now()
     b.endTime = endTime
     b.errorCount = error_count
+    b.status = 'Complete'
     b.save()
 
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
@@ -298,6 +302,7 @@ def loadBeepCdr(userName, filePath):
     b.start = startTime
     b.initialCount = initial_count
     b.uploadedBy = userName
+    b.status = 'InProgress'
     b.save()
     for i, row in df.iterrows():
         try:
@@ -329,6 +334,7 @@ def loadBeepCdr(userName, filePath):
     endTime = timezone.now()
     b.endTime = endTime
     b.errorCount = error_count
+    b.status='Complete'
     b.save()
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'),
             "initialCount": initial_count, "errorCount": error_count}

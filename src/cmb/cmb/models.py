@@ -177,6 +177,7 @@ class testModel(models.Model):
 class BulkLoadHistory(models.Model):
     type = models.CharField(max_length=50)
     initialCount = models.IntegerField()
+    status = models.CharField(max_length=20)
     errorCount = models.IntegerField(null=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)

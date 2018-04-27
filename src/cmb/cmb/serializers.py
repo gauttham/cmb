@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
+from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, \
+    beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory, BulkLoadFailedList
 from django.utils import timezone
 from . import constants
 
@@ -236,3 +237,10 @@ class FreebiesTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'Name', 'createdDate', 'updatedDate')
 
 
+class BulkHistorySerializer(serializers.ModelSerializer):
+    start = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    end = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = BulkLoadHistory
+        fields = ('type', 'initialCount', 'status', 'errorCount', 'start', 'end', 'uploadedBy')

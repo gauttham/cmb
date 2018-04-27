@@ -1,5 +1,5 @@
-from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType
-from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer
+from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory,BulkLoadFailedList
+from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -722,6 +722,23 @@ class reports(APIView):
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
 
+####
 
+class BulkLoadHistoryList(APIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
+    @loadCsv
+    def get(self, request, format=None):
+        dataset = BulkLoadHistory.objects.all()
+        serializer = BulkHistorySerializer(dataset, many=True)
+        return serializer
+
+    def post(self, request, format=None):
+        serializer = BulkHistorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': '1'})
+        resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
