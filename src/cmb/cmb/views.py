@@ -701,6 +701,7 @@ class ExecuteRevenueCalculator(APIView):
 
 
 class reports(APIView):
+    @loadCsv
     def get(self, request):
         try:
             start = str(request.query_params.get('start'))
