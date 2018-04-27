@@ -125,6 +125,7 @@ def loadCdr(userName, filePath):
     interim_df['datetime'] = interim_df["date"].map(str) + ' ' + interim_df["time"]
     df = interim_df.where((pd.notnull(interim_df)), None)
     b = BulkLoadHistory()
+    b.type = 'inCdr'
 
     startTime = timezone.now()
     error_file = open("cmb/reports/error.txt", "a")
@@ -205,10 +206,15 @@ def loadCdr(userName, filePath):
             except Exception as e:
                 error_count += 1
                 error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
-
         except Exception as e:
             error_count += 1
-            error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+            # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+            t = BulkLoadFailedList()
+            t.cdr = row['gSMCallReferenceNumber']
+            t.createdDate = timezone.now()
+            t.uploadedBy = userName
+            t.BulkLoadHistory = b
+            t.save()
     endTime = timezone.now()
     b.endTime = endTime
     b.errorCount = error_count
@@ -231,7 +237,7 @@ def loadPostCdr(userName, filePath):
     interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
     df = interimpost_df.where((pd.notnull(interimpost_df)), None)
     b = BulkLoadHistory()
-
+    b.type = "postCdr"
     startTime = timezone.now()
     error_file = open("cmb/reports/postpaiderror.txt", "a")
     initial_count = df['datetime'].count()
@@ -259,7 +265,13 @@ def loadPostCdr(userName, filePath):
             except Exception as e:
                 print(e)
                 error_count += 1
-                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+                # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+                t = BulkLoadFailedList()
+                t.cdr = row['Network Call Reference']
+                t.createdDate = timezone.now()
+                t.uploadedBy = userName
+                t.BulkLoadHistory = b
+                t.save()
         except Exception as e:
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
@@ -278,6 +290,7 @@ def loadBeepCdr(userName, filePath):
     # interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
     df = interimpost_df.where((pd.notnull(interimpost_df)), None)
     b = BulkLoadHistory()
+    b.type = "beepCdr"
     startTime = timezone.now()
     error_file = open("cmb/reports/beeperror.txt", "a")
     initial_count = df['dateTime'].count()
@@ -300,7 +313,16 @@ def loadBeepCdr(userName, filePath):
             except Exception as e:
                 print(e)
                 error_count += 1
-                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+                # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+                t = BulkLoadFailedList()
+                t.cdr = str(row['id'])
+                t.createdDate = timezone.now()
+                t.uploadedBy = str(userName)
+                t.BulkLoadHistory = b
+                try:
+                    t.save()
+                except Exception as Ex:
+                    print(Ex)
         except Exception as e:
             error_count += 1
             error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
@@ -308,5 +330,5 @@ def loadBeepCdr(userName, filePath):
     b.endTime = endTime
     b.errorCount = error_count
     b.save()
-    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
+    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'),
             "initialCount": initial_count, "errorCount": error_count}

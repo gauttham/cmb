@@ -89,9 +89,6 @@ def executeCustomSql(sqlstr):
 def generateReport1(start, end):
 
     queryStr = constants.report1 % (start, end)
-    print ("querystr is : ", queryStr)
-
-
     try:
         data = executeCustomSql(queryStr)
         return data

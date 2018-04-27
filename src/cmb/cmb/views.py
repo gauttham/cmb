@@ -597,8 +597,8 @@ class BulkLoader(APIView):
                 return Response({"status": "0", "description": str(e)})
         else:
             return Response({'status': '0',
-                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, '
-                                   'exceptionList, PrepaidInCDR, beepCdr, postCdr' })
+                             'description': 'Wrong table name, please use serviceClass, dedicatedAccount, '
+                                            'exceptionList, PrepaidInCDR, beepCdr, postCdr'})
 
     def post(self, request):
         userName = request.data.get('userName')
@@ -698,5 +698,30 @@ class ExecuteRevenueCalculator(APIView):
             return Response({"status": "1", "description": "Revenue calculation completed"})
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
+
+
+class reports(APIView):
+    def get(self, request):
+        try:
+            start = str(request.query_params.get('start'))
+            end = str(request.query_params.get('end'))
+            aggregation = str(request.query_params.get("timeType"))
+            reportType = str(request.query_params.get("reportType"))
+
+            if reportType == "revenueReport":
+                result = generateRevenueReport(start, end, aggregation)
+            elif reportType == "nonRevenueReport":
+                result = generateNonRevenueReport(start, end)
+            elif reportType == "stats1":
+                result = generateStats1(start, end)
+            elif reportType == "auditing1":
+                result = generateReport1(start, end)
+            else:
+                result = {"status": "0", "description": "No Matching report type"}
+            return Response(result)
+        except Exception as e:
+            return Response({"status": "0", "description": str(e)})
+
+
 
 
