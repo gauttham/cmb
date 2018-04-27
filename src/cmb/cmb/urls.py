@@ -56,7 +56,7 @@ urlpatterns = [
     # url(r'^reports/nonRevenueReport', views.NoNRevenueReport.as_view()),
     # url(r'^reports/stats1', views.Stats1.as_view()),
     # url(r'^execute/revenue', views.ExecuteRevenueCalculator.as_view()),
-    url(r'^BulkLoadHistroy/$', views.BulkLoadHistoryList.as_view()),
+    url(r'^BulkLoadHistory/$', views.BulkLoadHistoryList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])
