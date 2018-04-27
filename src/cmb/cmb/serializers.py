@@ -243,4 +243,4 @@ class BulkHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BulkLoadHistory
-        fields = ('type', 'initialCount', 'status', 'errorCount', 'start', 'end', 'uploadedBy')
+        fields = ('id', 'type', 'initialCount', 'status', 'errorCount', 'start', 'end', 'uploadedBy')
