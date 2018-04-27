@@ -121,6 +121,7 @@ def loadServiceClass(userName, filePath):
 
 
 def loadCdr(userName, filePath):
+    import pdb; pdb.set_trace()
     interim_df = pd.read_csv(filePath, header=None, names=incdr_header)
     interim_df['datetime'] = interim_df["date"].map(str) + ' ' + interim_df["time"]
     df = interim_df.where((pd.notnull(interim_df)), None)
@@ -206,7 +207,6 @@ def loadCdr(userName, filePath):
                     da.save()
             except Exception as e:
                 error_count += 1
-                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
         except Exception as e:
             error_count += 1
             # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
