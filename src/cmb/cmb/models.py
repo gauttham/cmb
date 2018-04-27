@@ -190,6 +190,10 @@ class BulkLoadHistory(models.Model):
 class BulkLoadFailedList(models.Model):
     BulkLoadHistory = models.ForeignKey(BulkLoadHistory, on_delete=models.CASCADE)
     cdr = models.TextField(null=True)
+    error = models.CharField(max_length=250)
     createdDate = models.DateTimeField(default=timezone.now)
     uploadedBy = models.CharField(max_length=50)
+
+    def __str__(self):
+        return '%s: %s' % (self.cdr, self.error)
 

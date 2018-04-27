@@ -244,3 +244,13 @@ class BulkHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BulkLoadHistory
         fields = ('id', 'type', 'initialCount', 'status', 'errorCount', 'start', 'end', 'uploadedBy')
+
+
+class BulkLoadFailedSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = BulkLoadFailedList
+        fields = ('id', 'BulkLoadHistory', 'cdr', 'error', 'createdDate', 'uploadedBy')
+
+

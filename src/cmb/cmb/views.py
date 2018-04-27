@@ -1,5 +1,5 @@
 from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory,BulkLoadFailedList
-from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer
+from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -742,4 +742,16 @@ class BulkLoadHistoryList(APIView):
             return Response({'status': '1'})
         resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+class BulkFailedList(APIView):
+    @loadCsv
+    def get(self, request, format=None):
+        bulkLoadHistoryId = request.query_params.get("bulkLoadId")
+        if bulkLoadHistoryId:
+            BulkHistory = BulkLoadHistory.objects.get(pk=bulkLoadHistoryId)
+            dataset = BulkLoadFailedList.objects.filter(BulkLoadHistory=BulkHistory)
+        else:
+            dataset = BulkLoadFailedList.objects.all().order_by('-id')[:10:1]
+        serializer = BulkLoadFailedSerializer(dataset, many=True)
+        return Response(serializer.data)
 

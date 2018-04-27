@@ -1,5 +1,6 @@
 from .models import beepCDR, ServiceClass, DaInCdrMap, DedicatedAccount, Freebies, ServiceClass, ExceptionList, InCdr, DaInCdrMap, beepCDR, msisdnType, BulkLoadHistory, BulkLoadFailedList
 import pandas as pd
+import json
 from datetime import datetime
 from django.utils import timezone
 from datetime import datetime
@@ -210,7 +211,9 @@ def loadCdr(userName, filePath):
             error_count += 1
             # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
             t = BulkLoadFailedList()
-            t.cdr = row['gSMCallReferenceNumber']
+            strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
+            t.cdr = strrow
+            t.error = str(e)
             t.createdDate = timezone.now()
             t.uploadedBy = userName
             t.BulkLoadHistory = b
@@ -269,7 +272,9 @@ def loadPostCdr(userName, filePath):
                 error_count += 1
                 # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
                 t = BulkLoadFailedList()
-                t.cdr = row['Network Call Reference']
+                strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
+                t.cdr = strrow
+                t.error = str(e)
                 t.createdDate = timezone.now()
                 t.uploadedBy = userName
                 t.BulkLoadHistory = b
@@ -319,7 +324,9 @@ def loadBeepCdr(userName, filePath):
                 error_count += 1
                 # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
                 t = BulkLoadFailedList()
-                t.cdr = str(row['id'])
+                strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
+                t.cdr = strrow
+                t.error = str(e)
                 t.createdDate = timezone.now()
                 t.uploadedBy = str(userName)
                 t.BulkLoadHistory = b
