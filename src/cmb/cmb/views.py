@@ -1,5 +1,5 @@
-from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory,BulkLoadFailedList
-from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer
+from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory,BulkLoadFailedList,userRoles, Roles
+from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,13 +8,11 @@ from .controllers import RevenueCalculator, generateReport1, generateRevenueRepo
 from datetime import datetime
 from . import loader
 from .decorators import loadCsv
+from rest_framework.authentication import BasicAuthentication
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
-# Imports for Authentication
-# from django.contrib.auth import authenticate
-# from rest_framework.decorators import api_view
-# from rest_framework.authtoken .models import Token
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.authentication import TokenAuthentication
 
 
 # @api_view(["POST"])
@@ -45,7 +43,7 @@ class ServiceClassList(APIView):
     List all Service Classes, or create a new service class
     """
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -68,7 +66,7 @@ class ServiceClassDetails(APIView):
 
     """
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -99,7 +97,7 @@ class ServiceClassDetails(APIView):
 #######
 class DedicatedAccountList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -122,7 +120,7 @@ class DedicatedAccountDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -153,7 +151,7 @@ class DedicatedAccountDetails(APIView):
 
 class ExceptionListList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -176,7 +174,7 @@ class ExceptionListDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -208,7 +206,7 @@ class ExceptionListDetails(APIView):
 
 class InCdrList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -236,7 +234,7 @@ class InCdrDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
     def get_object(self, id):
@@ -271,7 +269,7 @@ class InCdrDetails(APIView):
 ######
 class DaInCdrMapList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
     @loadCsv
@@ -294,7 +292,7 @@ class DaInCdrMapDetails(APIView):
 
     """
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -326,7 +324,7 @@ class DaInCdrMapDetails(APIView):
 class BeepCDRList(APIView):
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -349,7 +347,7 @@ class BeepCDRDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
     def get_object(self, id):
@@ -382,7 +380,7 @@ class BeepCDRDetails(APIView):
 
 class RevenueConfigList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -405,7 +403,7 @@ class RevenueConfigDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -438,7 +436,7 @@ class RevenueConfigDetails(APIView):
 class FreebiesList(APIView):
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -461,7 +459,7 @@ class FreebiesDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -493,7 +491,7 @@ class FreebiesDetails(APIView):
 
 class FreebiesTypeList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
@@ -516,7 +514,7 @@ class FreebiesTypeDetails(APIView):
     """
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, id):
         try:
@@ -547,7 +545,7 @@ class FreebiesTypeDetails(APIView):
 class BulkLoader(APIView):
 
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         userName = request.GET.get('userName')
@@ -653,7 +651,7 @@ class BulkLoader(APIView):
 
 
 class Report1(APIView):
-
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -663,6 +661,7 @@ class Report1(APIView):
 
 
 class RevenueReport(APIView):
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -673,6 +672,7 @@ class RevenueReport(APIView):
 
 
 class NoNRevenueReport(APIView):
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -682,6 +682,7 @@ class NoNRevenueReport(APIView):
 
 
 class Stats1(APIView):
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -691,6 +692,7 @@ class Stats1(APIView):
 
 
 class ExecuteRevenueCalculator(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         try:
@@ -701,6 +703,7 @@ class ExecuteRevenueCalculator(APIView):
 
 
 class reports(APIView):
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request):
         try:
@@ -725,15 +728,16 @@ class reports(APIView):
 
 ####
 
+
 class BulkLoadHistoryList(APIView):
     # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     @loadCsv
     def get(self, request, format=None):
         dataset = BulkLoadHistory.objects.all()
         serializer = BulkHistorySerializer(dataset, many=True)
-        return serializer
+        return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = BulkHistorySerializer(data=request.data)
@@ -744,6 +748,7 @@ class BulkLoadHistoryList(APIView):
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
 class BulkFailedList(APIView):
+    permission_classes = (IsAuthenticated,)
     @loadCsv
     def get(self, request, format=None):
         bulkLoadHistoryId = request.query_params.get("bulkLoadId")
@@ -755,3 +760,49 @@ class BulkFailedList(APIView):
         serializer = BulkLoadFailedSerializer(dataset, many=True)
         return Response(serializer.data)
 
+
+class login(APIView):
+    def post(self, request, format=None):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        authobj = BasicAuthentication()
+        try:
+            roleList = []
+            res = authobj.authenticate_credentials(username, password)
+            user = userRoles.objects.filter(user=User.objects.get(username=username))
+            for indUser in user:
+                for j in indUser.roles.all():
+                    roleList.append(j.roleName)
+            response = {"status": "1", "roles": roleList}
+            return Response(response)
+        except Exception as e:
+            response = {"status": "0", "description": str(e)}
+            return Response(response)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def create_user(request):
+    serialized = UserSerializer(data=request.data)
+    if serialized.is_valid():
+        serialized.save()
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RoleList(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        dataset = Roles.objects.all()
+        serializer = RoleSerializer(dataset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = RoleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': '1'})
+        resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)

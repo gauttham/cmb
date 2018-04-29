@@ -14,7 +14,6 @@ def loadCsv(func):
             resultserializer = func(*args, **kwargs)
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="BulkExport.csv"'
-            # header = resultserializer.Meta.fields
             for item in resultserializer.data[0].iterkeys():
                 header.append(item)
             writer = csv.DictWriter(response, fieldnames=header)

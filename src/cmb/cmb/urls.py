@@ -19,13 +19,14 @@ from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.documentation import include_docs_urls
 from . import csvloader
-
+from rest_framework.authtoken import views as rest_framework_views
 from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
 
 
 urlpatterns = [
     # url(r'^login', views.login),
+    url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),
     url(r'^docs/', schema_view),
     url(r'^admin/', admin.site.urls),
     url(r'^DedicatedAccounts/$', views.DedicatedAccountList.as_view()),
@@ -47,8 +48,6 @@ urlpatterns = [
     url(r'^FreebiesType/$', views.FreebiesTypeList.as_view()),
     url(r'^FreebiesType/(?P<pk>[0-9]+)/$', views.FreebiesTypeDetails.as_view()),
     url(r'^BulkLoader/$', views.BulkLoader.as_view()),
-    # url(r'^BulkLoader/$', views.samplepost),
-    # url(r'^sample/$', views.DAViewSet.as_view()),
     url(r'^dacsv/$', csvloader.DAViewSet.as_view()),
     url(r'^reports', views.reports.as_view()),
     # url(r'^reports/report1', views.Report1.as_view()),
@@ -58,6 +57,9 @@ urlpatterns = [
     url(r'^execute/revenue', views.ExecuteRevenueCalculator.as_view()),
     url(r'^BulkLoadHistory/$', views.BulkLoadHistoryList.as_view()),
     url(r'^BulkLoadFailedList/$', views.BulkFailedList.as_view()),
+    url(r'^login/$', views.login.as_view()),
+    url(r'^createuser/$', views.create_user),
+    url(r'^roles/$', views.RoleList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])

@@ -3,6 +3,17 @@ from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 from . import settings
 from django.utils import timezone
+from django.conf import settings as dsettings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
+@receiver(post_save, sender=dsettings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.get_or_create(user=instance)
+
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
@@ -196,4 +207,24 @@ class BulkLoadFailedList(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.cdr, self.error)
+
+
+class Roles(models.Model):
+    roleName = models.CharField(max_length=50)
+    createdBy = models.CharField(max_length=50, null=True, blank=True)
+    createdDate = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s' % self.roleName
+
+
+class userRoles(models.Model):
+    user = models.ForeignKey(User)
+    roles = models.ManyToManyField(Roles)
+
+    def __str__(self):
+        return '%s' % (self.user)
+
+
+
 

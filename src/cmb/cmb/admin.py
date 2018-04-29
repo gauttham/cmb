@@ -17,7 +17,8 @@ admin.site.register(models.FreebiesType)
 admin.site.register(models.Freebies)
 admin.site.register(models.msisdnType)
 admin.site.register(models.ScheduleMgr)
-
+admin.site.register(models.Roles)
+admin.site.register(models.userRoles)
 
 #####
 

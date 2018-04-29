@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, \
-    beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory, BulkLoadFailedList
+    Roles, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory, BulkLoadFailedList
 from django.utils import timezone
 from . import constants
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.models import User
 
 
 class ServiceClassSerializer(serializers.ModelSerializer):
@@ -253,4 +255,23 @@ class BulkLoadFailedSerializer(serializers.ModelSerializer):
         model = BulkLoadFailedList
         fields = ('id', 'BulkLoadHistory', 'cdr', 'error', 'createdDate', 'uploadedBy')
 
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+    def create(self, validated_data):
+        user = super(UserSerializer, self).get_or_create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Roles
+        fields = ('roleName', 'createdBy')
 
