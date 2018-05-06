@@ -255,23 +255,40 @@ class BulkLoadFailedSerializer(serializers.ModelSerializer):
         model = BulkLoadFailedList
         fields = ('id', 'BulkLoadHistory', 'cdr', 'error', 'createdDate', 'uploadedBy')
 
-
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password')
-
-    def create(self, validated_data):
-        user = super(UserSerializer, self).get_or_create(validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+#
+# class UserSerializer(serializers.ModelSerializer):
+#     password = serializers.CharField(write_only=True)
+#
+#     class Meta:
+#         model = User
+#         fields = ('username', 'email', 'password')
+#
+#     def create(self, validated_data):
+#         user = super(UserSerializer, self).get_or_create(validated_data)
+#         user.set_password(validated_data['password'])
+#         user.save()
+#         return user
 
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roles
         fields = ('roleName', 'createdBy')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+        write_only_fields = ('password',)
+        read_only_fields = ('is_staff', 'is_superuser', 'is_active', 'date_joined',)
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
 

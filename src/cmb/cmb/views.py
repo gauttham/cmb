@@ -1,18 +1,23 @@
-from .models import  ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory,BulkLoadFailedList,userRoles, Roles
-from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer
+from .models import ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, \
+    FreebiesType, BulkLoadHistory, BulkLoadFailedList, userRoles, Roles
+from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, \
+    DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, \
+    FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer
 from django.http import Http404
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .controllers import RevenueCalculator, generateReport1, generateRevenueReport, generateNonRevenueReport, generateStats1
+from .controllers import RevenueCalculator, generateReport1, generateRevenueReport, generateNonRevenueReport, \
+    generateStats1
 from datetime import datetime
 from . import loader
+import json
 from .decorators import loadCsv
 from rest_framework.authentication import BasicAuthentication
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.decorators import api_view, permission_classes
-
 
 
 # @api_view(["POST"])
@@ -147,6 +152,7 @@ class DedicatedAccountDetails(APIView):
         dataset.delete()
         return Response({'status': '1'})
 
+
 #####
 
 class ExceptionListList(APIView):
@@ -236,7 +242,6 @@ class InCdrDetails(APIView):
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-
     def get_object(self, id):
         try:
             return InCdr.objects.get(pk=id)
@@ -270,7 +275,6 @@ class InCdrDetails(APIView):
 class DaInCdrMapList(APIView):
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-
 
     @loadCsv
     def get(self, request, format=None):
@@ -319,10 +323,10 @@ class DaInCdrMapDetails(APIView):
         dataset.delete()
         return Response({'status': '1'})
 
+
 ########
 
 class BeepCDRList(APIView):
-
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -348,7 +352,6 @@ class BeepCDRDetails(APIView):
 
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-
 
     def get_object(self, id):
         try:
@@ -434,7 +437,6 @@ class RevenueConfigDetails(APIView):
 ####
 
 class FreebiesList(APIView):
-
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -543,7 +545,6 @@ class FreebiesTypeDetails(APIView):
 
 
 class BulkLoader(APIView):
-
     # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -647,11 +648,12 @@ class BulkLoader(APIView):
                 return Response({"status": "0", "description": str(e)})
         else:
             return Response({'status': '0',
-                    'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'})
+                             'description': 'Wrong table name, please use serviceClass, dedicatedAccount, exceptionList'})
 
 
 class Report1(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -662,6 +664,7 @@ class Report1(APIView):
 
 class RevenueReport(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -673,6 +676,7 @@ class RevenueReport(APIView):
 
 class NoNRevenueReport(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -683,6 +687,7 @@ class NoNRevenueReport(APIView):
 
 class Stats1(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request):
         start = str(request.query_params.get('start'))
@@ -704,6 +709,7 @@ class ExecuteRevenueCalculator(APIView):
 
 class reports(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request):
         try:
@@ -726,6 +732,7 @@ class reports(APIView):
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
 
+
 ####
 
 
@@ -747,8 +754,10 @@ class BulkLoadHistoryList(APIView):
         resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
+
 class BulkFailedList(APIView):
     permission_classes = (IsAuthenticated,)
+
     @loadCsv
     def get(self, request, format=None):
         bulkLoadHistoryId = request.query_params.get("bulkLoadId")
@@ -762,7 +771,7 @@ class BulkFailedList(APIView):
 
 
 class login(APIView):
-    def post(self, request, format=None):
+    def post(self, request, format='json'):
         username = request.data.get('username')
         password = request.data.get('password')
         authobj = BasicAuthentication()
@@ -792,7 +801,7 @@ def create_user(request):
 
 
 class RoleList(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         dataset = Roles.objects.all()
@@ -806,3 +815,90 @@ class RoleList(APIView):
             return Response({'status': '1'})
         resp = {'status': '0', 'description': serializer.errors.get('msisdn')[0]}
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDetails(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, format='json'):
+        try:
+            username = request.query_params.get('username')
+            roleList = []
+            user = userRoles.objects.filter(user=User.objects.get(username=username))
+            for indUser in user:
+                for j in indUser.roles.all():
+                    roleList.append(j.roleName)
+            response = {"status": "1", "roles": roleList}
+            return Response(response)
+        except Exception as e:
+            response = {"status": "0", "description": str(e)}
+            return Response(response)
+
+    def post(self, request, format='json'):
+
+        try:
+
+            username = request.data.get('username')
+            password = request.data.get('password')
+            roles = request.data.get('roles')
+            try:
+                serializer = UserSerializer(data=request.data)
+                try:
+                    if serializer.is_valid():
+                        serializer.save()
+
+                    user = User.objects.create_user(username=username, password=password)
+                except Exception as e:
+                    user = User.objects.get(username=username)
+
+
+                userRole = userRoles.objects.get_or_create(user=User.objects.get(username=username))
+                # user = User.objects.get(username=username)
+
+                # Remove the existing manytomany relationships
+                try:
+                    for i in userRole:
+                        if not isinstance(i, bool):
+                            for j in i.roles.all():
+                                i.roles.remove(j)
+                except Exception as e:
+                    pass
+
+                # Adding new roles passed to the User
+                for role in roles:
+                    try:
+                        indRole = Roles.objects.get(roleName=role)
+                        for i in userRole:
+                            if not isinstance(i, bool):
+                                i.roles.add(indRole)
+
+                    except Exception as e:
+                        return Response({"status": "0", "description": str(e)})
+                return Response({"status": "1"})
+            except Exception as e:
+                return Response({"status": "0", "description": str(e)})
+        except Exception as e:
+            return Response({"status": "0", "description": str(e)})
+
+    def delete(self, request, format='json'):
+        try:
+            user = User.objects.get(username=request.query_params.get('username'))
+            user.delete()
+            return Response({'status': '1'})
+        except Exception as e:
+            return Response(str(e))
+
+
+
+
+
+class UserAdd(APIView):
+
+    def post(self, request, format='json'):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
+

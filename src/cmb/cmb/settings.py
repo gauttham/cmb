@@ -155,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Beirut'
 
 USE_I18N = True
 
@@ -171,3 +171,7 @@ STATIC_URL = '/static/'
 
 # App Defaults
 DEFAULT_APP_USER = 'Khal Drogo'
+
+
+# Extended Auth User Model
+# AUTH_USER_MODEL = 'cmb.User'

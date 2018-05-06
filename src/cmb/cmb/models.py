@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
+
 @receiver(post_save, sender=dsettings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -219,12 +220,9 @@ class Roles(models.Model):
 
 
 class userRoles(models.Model):
-    user = models.ForeignKey(User)
-    roles = models.ManyToManyField(Roles)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    roles = models.ManyToManyField(to=Roles, blank=True)
 
     def __str__(self):
         return '%s' % (self.user)
-
-
-
 
