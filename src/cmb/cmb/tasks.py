@@ -5,6 +5,7 @@ from .models import testModel
 import requests
 from datetime import timedelta, datetime
 from .controllers import RevenueCalculator
+from . import loader
 
 @task(name="sum_two_numbers")
 def add(x, y):
@@ -58,4 +59,34 @@ def generate_weekly_stats1():
 def RevenueCalculatorTask():
     RevenueCalculator()
     return True
+
+
+@task(name='BulkLoad-dedicatedAccount')
+def BulkloadDedicatedAccount(userName, filePath):
+    loader.loadDedicatedAccount(userName, filePath)
+
+
+@task(name='BulkLoad-ExceptionList')
+def BulkLoadExceptionList(userName, filePath):
+    loader.loadExceptionList(userName, filePath)
+
+
+@task(name='BulkLoad-serviceClass')
+def BulkloadServiceClass(userName, filePath):
+    loader.loadServiceClass(userName. filePath)
+
+
+@task(name='BulkLoad-PrepaidInCDR')
+def BulkLoadPrepaidInCDR(userName, filePath):
+    loader.loadCdr(userName, filePath)
+
+
+@task(name='BulkLoad-postCdr')
+def BulkLoadPostCDR(userName, filePath):
+    loader.loadPostCdr(userName, filePath)
+
+
+@task(name='BulkLoad-beepCdr')
+def BulkLoadBeepCDR(userName, filePath):
+    loader.loadBeepCdr(userName, filePath)
 

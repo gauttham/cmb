@@ -18,6 +18,7 @@ from rest_framework.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.decorators import api_view, permission_classes
+from . import tasks
 
 
 # @api_view(["POST"])
@@ -549,13 +550,13 @@ class BulkLoader(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        userName = request.GET.get('userName')
-        tableName = request.GET.get('tableName')
-        filePath = request.GET.get('filePath')
+        userName = request.query_params.get('userName')
+        tableName = request.query_params.get('tableName')
+        filePath = request.query_params.get('filePath')
 
         if tableName == 'dedicatedAccount':
             try:
-                loader.loadDedicatedAccount(userName, filePath)
+                tasks.BulkloadDedicatedAccount.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
@@ -563,7 +564,7 @@ class BulkLoader(APIView):
 
         elif tableName == 'exceptionList':
             try:
-                loader.loadExceptionList(userName, filePath)
+                tasks.BulkLoadExceptionList.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
@@ -571,27 +572,27 @@ class BulkLoader(APIView):
 
         elif tableName == 'serviceClass':
             try:
-                loader.loadServiceClass(userName, filePath)
+                tasks.BulkloadServiceClass.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
                 return Response({'status': '0', 'description': str(e)})
         elif tableName == 'PrepaidInCDR':
             try:
-                result = loader.loadCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadPrepaidInCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         elif tableName == 'postCdr':
             try:
-                result = loader.loadPostCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadPostCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         elif tableName == 'beepCdr':
             try:
-                result = loader.loadBeepCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadBeepCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         else:
@@ -605,7 +606,7 @@ class BulkLoader(APIView):
         filePath = request.data.get('filePath')
         if tableName == 'dedicatedAccount':
             try:
-                loader.loadDedicatedAccount(userName, filePath)
+                tasks.BulkloadDedicatedAccount.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
@@ -613,7 +614,7 @@ class BulkLoader(APIView):
 
         elif tableName == 'exceptionList':
             try:
-                loader.loadExceptionList(userName, filePath)
+                tasks.BulkLoadExceptionList.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
@@ -621,7 +622,7 @@ class BulkLoader(APIView):
 
         elif tableName == 'serviceClass':
             try:
-                loader.loadServiceClass(userName, filePath)
+                tasks.BulkloadServiceClass.delay(userName, filePath)
                 return Response({'status': '1'})
             except Exception as e:
                 print("Some Error Occurred: ", e)
@@ -629,21 +630,21 @@ class BulkLoader(APIView):
 
         elif tableName == 'PrepaidInCDR':
             try:
-                result = loader.loadCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadPrepaidInCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
 
         elif tableName == 'postCdr':
             try:
-                result = loader.loadPostCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadPostCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         elif tableName == 'beepCdr':
             try:
-                result = loader.loadBeepCdr(userName, filePath)
-                return Response(result)
+                tasks.BulkLoadBeepCDR.delay(userName, filePath)
+                return Response({'status': '1'})
             except Exception as e:
                 return Response({"status": "0", "description": str(e)})
         else:
