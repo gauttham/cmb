@@ -611,6 +611,12 @@ class BulkLoader(APIView):
         userName = request.data.get('userName')
         tableName = request.data.get('tableName')
         filePath = request.data.get('filePath')
+
+        try:
+            validateFile = pd.read_csv(filePath, nrows=2)
+        except Exception as e:
+            return Response({"status": "0", "description": str(e)})
+
         if tableName == 'dedicatedAccount':
             try:
                 tasks.BulkloadDedicatedAccount.delay(userName, filePath)
