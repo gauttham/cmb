@@ -19,6 +19,7 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.decorators import api_view, permission_classes
 from . import tasks
+import pandas as pd
 
 
 # @api_view(["POST"])
@@ -553,6 +554,12 @@ class BulkLoader(APIView):
         userName = request.query_params.get('userName')
         tableName = request.query_params.get('tableName')
         filePath = request.query_params.get('filePath')
+
+        try:
+            validateFile = pd.read_csv(filePath, nrows=2)
+        except Exception as e:
+            return Response({"status": "0", "description": str(e)})
+
 
         if tableName == 'dedicatedAccount':
             try:
