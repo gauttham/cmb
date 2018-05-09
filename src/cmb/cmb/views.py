@@ -2,7 +2,8 @@ from .models import ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCd
     FreebiesType, BulkLoadHistory, BulkLoadFailedList, userRoles, Roles
 from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, \
     DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, \
-    FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer
+    FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer, \
+    UserListSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -903,9 +904,6 @@ class UserDetails(APIView):
             return Response(str(e))
 
 
-
-
-
 class UserAdd(APIView):
 
     def post(self, request, format='json'):
@@ -915,4 +913,19 @@ class UserAdd(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserListView(APIView):
+
+    def get(self, request):
+        try:
+            username = request.query_params.get('username')
+            if username:
+                dataset = User.objects.filter(username=username)
+            else:
+                dataset = User.objects.all()
+            serializer = UserListSerializer(dataset, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(str(e))
 

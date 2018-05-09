@@ -292,3 +292,15 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
+
+class UserListSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(source='date_joined', format="%Y-%m-%d %H:%M:%S")
+    firstName = serializers.CharField(source='first_name')
+    lastName = serializers.CharField(source='last_name')
+    lastLogin = serializers.DateTimeField(source='last_login', format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = User
+        fields = ('username', 'firstName', 'lastName', 'lastLogin', 'createdDate')
+
+
