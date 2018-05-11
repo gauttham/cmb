@@ -1,7 +1,7 @@
 from .models import ExceptionList, DedicatedAccount, InCdr, DaInCdrMap, ServiceClass, RevenueConfig
 from django.db import connection
 from . import constants
-from .constants import RevenueCalculatorQuery, postpaidRevenueQuery
+from .constants import RevenueCalculatorQuery, postpaidRevenueQuery, updateReasonMoreThan1Hour
 from datetime import datetime, timedelta
 from . import serializers as cmbserializers
 
@@ -135,3 +135,9 @@ def generateStats1(start, end):
     except Exception as e:
         print("Some Error Occurred")
 
+
+def updatedMissedRecords(start, end):
+    try:
+        data1 = updateReasonMoreThan1Hour
+    except Exception as e:
+        print("Some Error Occurred")

@@ -163,3 +163,9 @@ select count(*) as 'Count of Callbacks', avg(b.chargedDuration) as 'Average Dura
 and a.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
 """
 
+
+updateReasonMoreThan1Hour = """
+update cmb_incdr 
+set reason = 'Incoming Call After stipulated Time'
+where revenueShared is null or revenueShared = '';
+"""
