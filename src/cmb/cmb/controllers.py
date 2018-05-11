@@ -136,7 +136,7 @@ def generateStats1(start, end):
         print("Some Error Occurred")
 
 
-def updatedMissedRecords(start, end):
+def updatedMissedRecords():
     try:
         data1 = updateReasonMoreThan1Hour
     except Exception as e:
