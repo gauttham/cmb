@@ -8,7 +8,7 @@ is_service_class_valid = "select count(1) from cmb_serviceclass where id in ('{s
 
 RevenueCalculatorQuery = """
 SELECT
-    pic.id AS 'CDRID',
+    pic.id AS 'id',
     pic.serviceClass_id,
     pic.accountValueBeforeCall,
     pic.accountValueAfterCall,
@@ -20,13 +20,13 @@ SELECT
     dim.DedicatedAccount,
     dim.valueBeforeCall,
     dim.valueAfterCall,
-    (callCharge * inMobilesPercentage / 100) revenue
+    (callCharge * inMobilesPercentage / 100) revenue 
 FROM
     cmb_incdr pic,
     cmb_daincdrmap dim,
     cmb_serviceclass sc,
     cmb_dedicatedaccount da,
-    cmb_beepcdr bc
+    cmb_beepcdr bc 
 WHERE
     pic.id = dim.InCdr_id
         AND da.id = dim.DedicatedAccount
@@ -74,7 +74,7 @@ WHERE
 
 postpaidRevenueQuery = """
 SELECT
-    a.id AS 'CDRID',
+    a.id AS 'id',
     a.callCharge,
     a.callerNumber,
     a.calledNumber,

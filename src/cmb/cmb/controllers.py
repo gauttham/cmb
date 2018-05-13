@@ -26,7 +26,6 @@ def RevenueCalculator():
     Calculates the revenue for each row and updates the row with the generated revenue
     :return: True/False
     """
-
     # Revenue Config will be used to parameterize the Revenue Calculator Query
     revenueConfig = getRevenueConfig()
     queryStr = RevenueCalculatorQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
@@ -44,33 +43,45 @@ def RevenueCalculator():
         return False
 
     try:
+        # For prepaid revenue
         for row in executeCustomSql(queryStr):
 
             flag = isServiceClassValid(row)
             scMetadata = getRevenueMetadatafromSC(row)
-
+            dataToSave = {}
             if flag == False:
-                row.revenueShared = 0
-                row.reason = 'Wrong SC'
-                serializer = cmbserializers.InCdrSerializer(data=row)
-                if serializer.is_valid():
-                    serializer.save()
+                m = InCdr.objects.get(id=row.get('id'))
+                m.revenueShared = 0
+                m.reason = 'Wrong SC'
+                m.createdDate = datetime.now()
+                m.updatedDate = datetime.now()
+                try:
+                    m.save()
+                except Exception as e:
+                    print(str(e))
                 continue
             else:
-                for da in DaInCdrMap.objects.filter(InCdr=row.get('CDRID')):
+                for da in DaInCdrMap.objects.filter(InCdr=row.get('id')):
                     if da.valueBeforeCall > da.valueAfterCall:
-                        row['revenueShared'] = row.get('callCharge') * scMetadata.inMobilesPercentage / 100
-                        row['MICRevenue'] = row.get('callCharge') * scMetadata.otherOperatorPercentage / 100
-                        serializer = cmbserializers.InCdrSerializer(data=row)
-                        if serializer.is_valid():
-                            serializer.save()
-                        continue
+                        m = InCdr.objects.get(id=row.get('id'))
+                        m.revenueShared = row.get('callCharge') * scMetadata.inMobilesPercentage / 100
+                        m.MICRevenue = row.get('callCharge') * scMetadata.otherOperatorPercentage / 100
+                        m.createdDate = datetime.now()
+                        m.updatedDate = datetime.now()
+                        try:
+                            m.save()
+                        except Exception as e:
+                            print(str(e))
                     else:
-                        row['revenueShared'] = 0
-                        row['reason'] = 'Wrong DA'
-                        serializer = cmbserializers.InCdrSerializer(data=row)
-                        if serializer.is_valid():
-                            serializer.save()
+                        m = InCdr.objects.get(id=row.get('id'))
+                        m.revenueShared = 0
+                        m.reason = 'Wrong DA'
+                        m.createdDate = datetime.now()
+                        m.updatedDate = datetime.now()
+                        try:
+                            m.save()
+                        except Exception as e:
+                            print(str(e))
     except Exception as e:
         print ("Some Error Occurred:", str(e))
 
@@ -138,6 +149,7 @@ def generateStats1(start, end):
 
 def updatedMissedRecords():
     try:
-        data1 = updateReasonMoreThan1Hour
+        data1 = executeCustomSql(updateReasonMoreThan1Hour)
+        return True
     except Exception as e:
         print("Some Error Occurred")

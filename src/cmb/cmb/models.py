@@ -58,14 +58,14 @@ class ExceptionList(models.Model):
 
 class InCdr(models.Model):
     id = models.AutoField(primary_key=True, max_length=20)
-    serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE, db_index=True)
+    serviceClass = models.ForeignKey(ServiceClass, on_delete=models.CASCADE, db_index=True, null=True)
     accountValueBeforeCall = models.FloatField(null=True)
     accountValueAfterCall = models.FloatField(null=True)
-    callCharge = models.FloatField()
-    chargedDuration = models.IntegerField()
-    callStartTime = models.DateTimeField(db_index=True)
-    callerNumber = models.CharField(max_length=20)
-    calledNumber = models.CharField(max_length=20)
+    callCharge = models.FloatField(null=True)
+    chargedDuration = models.IntegerField(null=True)
+    callStartTime = models.DateTimeField(db_index=True, null=True, blank=True)
+    callerNumber = models.CharField(max_length=20, null=True)
+    calledNumber = models.CharField(max_length=20, null=True)
     NCR = models.CharField(max_length=50, null=True, blank=True)
     subscriberType = models.IntegerField(default=1)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
@@ -74,7 +74,7 @@ class InCdr(models.Model):
     revenueShared = models.FloatField(null=True, blank=True)
     MICRevenue = models.FloatField(null=True, blank=True)
     reason = models.CharField(max_length=100, blank=True, null=True)
-    createdDate = models.DateTimeField(auto_now_add=True, db_index=True)
+    createdDate = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
@@ -150,7 +150,7 @@ class DedicatedAccount(models.Model):
 
 
 class DaInCdrMap(models.Model):
-    InCdr = models.ForeignKey(InCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts')
+    InCdr = models.ForeignKey(InCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts', null=True, blank=True)
     dedicatedAccount = models.IntegerField(null=True, blank=True)
     valueBeforeCall = models.FloatField(null=True, blank=True)
     valueAfterCall = models.FloatField(null=True, blank=True)
