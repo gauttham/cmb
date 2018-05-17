@@ -64,10 +64,10 @@ class InCdr(models.Model):
     callCharge = models.FloatField(null=True)
     chargedDuration = models.IntegerField(null=True)
     callStartTime = models.DateTimeField(db_index=True, null=True, blank=True)
-    callerNumber = models.CharField(max_length=20, null=True)
-    calledNumber = models.CharField(max_length=20, null=True)
+    callerNumber = models.CharField(max_length=20, null=True, db_index=True)
+    calledNumber = models.CharField(max_length=20, null=True, db_index=True)
     NCR = models.CharField(max_length=50, null=True, blank=True)
-    subscriberType = models.IntegerField(default=1)
+    subscriberType = models.IntegerField(default=1, db_index=True)
     redirectingNumber = models.CharField(null=True, blank=True, max_length=20)
     gsmCallRefNumber = models.CharField(max_length=20, null=True, blank=True)
     presentationIndicator = models.IntegerField(null=True)
@@ -84,8 +84,8 @@ class InCdr(models.Model):
 
 
 class beepCDR(models.Model):
-    calledNumber = models.CharField(max_length=20)
-    callerNumber = models.CharField(max_length=20)
+    calledNumber = models.CharField(max_length=20, db_index=True)
+    callerNumber = models.CharField(max_length=20, db_index=True)
     callStartTime = models.DateTimeField(db_index=True)
     MCID = models.CharField(max_length=20, null=True, blank=True)
     createdDate = models.DateTimeField(auto_now_add=True)
@@ -151,7 +151,7 @@ class DedicatedAccount(models.Model):
 
 class DaInCdrMap(models.Model):
     InCdr = models.ForeignKey(InCdr, on_delete=models.CASCADE, related_name='dedicatedAccounts', null=True, blank=True)
-    dedicatedAccount = models.IntegerField(null=True, blank=True)
+    dedicatedAccount = models.IntegerField(null=True, blank=True, db_index=True)
     valueBeforeCall = models.FloatField(null=True, blank=True)
     valueAfterCall = models.FloatField(null=True, blank=True)
     createdDate = models.DateTimeField(auto_now_add=True)
