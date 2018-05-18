@@ -113,7 +113,7 @@ and callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','
 revenueReport = """
 select sum(chargedDuration) as 'Total Calls Duration',
 sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',
-sum(MICRevenue) as 'MIC1 Revenue Share', sum(revenueShared) * 2 as 'Total Revenue',
+sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue',
 date_format(pic.callStartTime, '%s') as 'Time'
 from cmb_incdr pic
 where callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H')
