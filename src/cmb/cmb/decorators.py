@@ -25,8 +25,6 @@ def loadCsv(func):
                 for row in resultserializer.data:
                     writer.writerow(row)
 
-                print(response)
-                print(type(response))
                 return response
 
         else:
