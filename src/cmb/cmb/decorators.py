@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from collections import OrderedDict
 from . import settings
 from django.utils import timezone
+from datetime import datetime
+
 
 def loadCsv(func):
 
@@ -13,7 +15,22 @@ def loadCsv(func):
             header = []
             resultserializer = func(*args, **kwargs)
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="BulkExport.csv"'
+            if request.query_params.get("reportType") == "revenueReport":
+                response['Content-Disposition'] = 'attachment; filename="RevenueReport{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+            elif request.query_params.get("reportType") == "nonRevenueReport":
+                response['Content-Disposition'] = 'attachment; filename="NonRevenueReport{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+            elif request.query_params.get("reportType") == "stats1":
+                response['Content-Disposition'] = 'attachment; filename="Stats1{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+            elif request.query_params.get("reportType") == "auditing1":
+                response['Content-Disposition'] = 'attachment; filename="Auditing1{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+            else:
+                response['Content-Disposition'] = 'attachment; filename="BulkExport{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+
             for item in resultserializer.data[0].iterkeys():
                 header.append(item)
             writer = csv.DictWriter(response, fieldnames=header)
