@@ -6,6 +6,7 @@ import requests
 from datetime import timedelta, datetime
 from .controllers import RevenueCalculator
 from . import loader
+from . import controllers
 
 @task(name="sum_two_numbers")
 def add(x, y):
@@ -89,4 +90,9 @@ def BulkLoadPostCDR(userName, filePath):
 @task(name='BulkLoad-beepCdr')
 def BulkLoadBeepCDR(userName, filePath):
     loader.loadBeepCdr(userName, filePath)
+
+
+@task(name="updatedMissedRecords")
+def updatedMissedRecordsTask():
+    controllers.updatedMissedRecords()
 

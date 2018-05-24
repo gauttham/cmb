@@ -114,12 +114,14 @@ revenueReport = """
 select sum(chargedDuration) as 'Total Calls Duration',
 sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',
 sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue',
-date_format(pic.callStartTime, '%s') as 'Time'
-from cmb_incdr pic
-where callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H')
+date_format(pic.callStartTime, '%s') as 'Time', , da.product as 'Dedicated Account
+from cmb_incdr pic, cmb_daincdrmap di, cmb_dedicatedaccount da
+where pic.id = di.InCdr_id
+and di.dedicatedAccount = da.id
+and callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H')
 and str_to_date('%s','%%Y-%%m-%%d %%H')
 and revenueShared is not null and revenueShared <> ''
-group by date_format(pic.callStartTime, '%s')
+group by date_format(pic.callStartTime, '%s'), da.product
 order by 5
 """
 
@@ -166,6 +168,6 @@ and a.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s'
 
 updateReasonMoreThan1Hour = """
 update cmb_incdr 
-set reason = 'Incoming Call After stipulated Time'
-where revenueShared is null or revenueShared = '';
+set reason = 'Late call back'
+where (revenueShared is null or revenueShared = '');
 """

@@ -672,9 +672,12 @@ class ExecuteRevenueCalculator(APIView):
 
     def get(self, request):
         try:
-            RevenueCalculator()
-            updatedMissedRecords()
-            return Response({"status": "1", "description": "Revenue calculation completed"})
+            tasks.RevenueCalculatorTask.delay()
+            print("Revenue calculator started...")
+            # RevenueCalculator()
+            tasks.updatedMissedRecordsTask.delay()
+            print("Missing Updates started...")
+            return Response({"status": "1", "description": "Revenue calculation Started"})
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
 
