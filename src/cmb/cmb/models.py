@@ -23,7 +23,7 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 class ServiceClass(models.Model):
     id = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=50, null=True, blank=True)
     isRevenueShare = models.BooleanField(default=False, db_index=True)
     inMobilesPercentage = models.IntegerField(null=True, default=50, db_index=True)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)

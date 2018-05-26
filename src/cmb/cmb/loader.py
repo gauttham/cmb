@@ -228,68 +228,72 @@ def loadCdr(userName, filePath):
 
 
 def loadPostCdr(userName, filePath):
-    sc = ServiceClass(id=9999)
-    sc.description = "Postpaid dummy service class"
-    sc.isRevenueShare = True
-    sc.inMobilesPercentage = 50
-    sc.otherOperatorPercentage = 100 - sc.inMobilesPercentage
-    sc.createdBy = userName
-    sc.updatedBy = userName
-    sc.save()
+    try:
+        sc, created = ServiceClass.objects.get_or_create(id=9999)
+        sc.description = "Postpaid dummy service class"
+        sc.isRevenueShare = True
+        sc.inMobilesPercentage = 50
+        sc.otherOperatorPercentage = 100 - sc.inMobilesPercentage
+        sc.createdBy = userName
+        sc.updatedBy = userName
+        sc.save()
 
-    interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
-    interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
-    df = interimpost_df.where((pd.notnull(interimpost_df)), None)
-    b = BulkLoadHistory()
-    b.type = "postCdr"
-    startTime = timezone.now()
-    error_file = open("cmb/reports/postpaiderror.txt", "a")
-    initial_count = df['datetime'].count()
-    error_count = 0
-    b.start = startTime
-    b.initialCount = initial_count
-    b.uploadedBy = userName
-    b.status = 'InProgress'
-    b.save()
+        interimpost_df = pd.read_csv(filePath, header=None, names=postcdr_header)
+        interimpost_df['datetime'] = interimpost_df["date"].map(str) + ' ' + interimpost_df["time"]
+        df = interimpost_df.where((pd.notnull(interimpost_df)), None)
+        b = BulkLoadHistory()
+        b.type = "postCdr"
+        startTime = timezone.now()
+        error_file = open("cmb/reports/postpaiderror.txt", "a")
+        initial_count = df['datetime'].count()
+        error_count = 0
+        b.start = startTime
+        b.initialCount = initial_count
+        b.uploadedBy = userName
+        b.status = 'InProgress'
+        b.save()
 
-    for i, row in df.iterrows():
-        try:
-            m = InCdr()
-            m.serviceClass = ServiceClass.objects.get(id=9999)
-            m.gsmCallRefNumber = row['Network Call Reference']
-            m.callerNumber = row['A']
-            m.calledNumber = row['B']
-            m.callStartTime = datetime.strptime(row['datetime'], '%d/%m/%y %H:%M:%S').strftime(
-            '%Y-%m-%d %H:%M:%S')
-            m.chargedDuration = row['Duration']
-            m.callCharge = row['Total Charged']
-            m.createdBy = userName
-            m.updatedBy = userName
+        for i, row in df.iterrows():
             try:
-                m.save()
+                m = InCdr()
+                m.serviceClass = ServiceClass.objects.get(id=9999)
+                m.gsmCallRefNumber = row['Network Call Reference']
+                m.callerNumber = row['A']
+                m.calledNumber = row['B']
+                m.callStartTime = datetime.strptime(row['datetime'], '%d/%m/%y %H:%M:%S').strftime(
+                '%Y-%m-%d %H:%M:%S')
+                m.chargedDuration = row['Duration']
+                m.callCharge = row['Total Charged']
+                m.subscriberType = 2
+                m.createdBy = userName
+                m.updatedBy = userName
+                try:
+                    m.save()
+                except Exception as e:
+                    print(e)
+                    error_count += 1
+                    # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+                    t = BulkLoadFailedList()
+                    strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
+                    t.cdr = strrow
+                    t.error = str(e)
+                    t.createdDate = timezone.now()
+                    t.uploadedBy = userName
+                    t.BulkLoadHistory = b
+                    t.save()
             except Exception as e:
-                print(e)
                 error_count += 1
-                # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
-                t = BulkLoadFailedList()
-                strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
-                t.cdr = strrow
-                t.error = str(e)
-                t.createdDate = timezone.now()
-                t.uploadedBy = userName
-                t.BulkLoadHistory = b
-                t.save()
-        except Exception as e:
-            error_count += 1
-            error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
-    endTime = timezone.now()
-    b.endTime = endTime
-    b.errorCount = error_count
-    b.status = 'Complete'
-    b.save()
+                error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
+        endTime = timezone.now()
+        b.endTime = endTime
+        b.errorCount = error_count
+        b.status = 'Complete'
+        b.save()
 
-    return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
-            "initialCount": initial_count, "errorCount": error_count}
+        return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'), "endTime":     endTime.strftime('%Y-%m-%d %H:%M:%S'),
+                "initialCount": initial_count, "errorCount": error_count}
+    except Exception as e:
+        print(str(e))
 
 
 # Bulk Loading beep CDR File
