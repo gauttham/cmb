@@ -74,7 +74,7 @@ def BulkLoadExceptionList(userName, filePath):
 
 @task(name='BulkLoad-serviceClass')
 def BulkloadServiceClass(userName, filePath):
-    loader.loadServiceClass(userName. filePath)
+    loader.loadServiceClass(userName, filePath)
 
 
 @task(name='BulkLoad-PrepaidInCDR')
