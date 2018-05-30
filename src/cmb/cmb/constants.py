@@ -110,20 +110,7 @@ and callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','
 
 # Report 2 - Revenue Report
 
-revenueReport = """
-select sum(chargedDuration) as 'Total Calls Duration',
-sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',
-sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue',
-date_format(pic.callStartTime, '%s') as 'Time', , da.product as 'Dedicated Account
-from cmb_incdr pic, cmb_daincdrmap di, cmb_dedicatedaccount da
-where pic.id = di.InCdr_id
-and di.dedicatedAccount = da.id
-and callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H')
-and str_to_date('%s','%%Y-%%m-%%d %%H')
-and revenueShared is not null and revenueShared <> ''
-group by date_format(pic.callStartTime, '%s'), da.product
-order by 5
-"""
+revenueReport = """select sum(chargedDuration) as 'Total Calls Duration', sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue', date_format(pic.callStartTime, '%s') as 'Time', da.product as 'Dedicated Account' from cmb_incdr pic, cmb_daincdrmap di, cmb_dedicatedaccount da where pic.id = di.InCdr_id and di.dedicatedAccount = da.id and callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H') and str_to_date('%s','%%Y-%%m-%%d %%H') and revenueShared is not null and revenueShared <> '' group by date_format(pic.callStartTime, '%s'), da.product  order by 5 """
 
 
 # Report 3 - Non Revenue Report
