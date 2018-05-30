@@ -129,7 +129,7 @@ order by 5
 # Report 3 - Non Revenue Report
 
 nonRevenueReport = """
-select sc.description as 'Service Class', 'InMobiles' as 'Partner Name',
+select distinct sc.description as 'Service Class', 'InMobiles' as 'Partner Name',
 pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party',
 pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time',
 pic.NCR as 'NCR', pic.reason as 'Failure Reason', bc.MCID as 'MCID', da.product as 'Dedicated Account'
@@ -146,7 +146,8 @@ WHERE
         AND (pic.calledNumber = bc.callerNumber
         AND pic.callerNumber = bc.calledNumber)
 and pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
-and revenueShared is null
+and pic.reason is not null
+limit 10000000
 """
 
 # Statistics 1 - 1
