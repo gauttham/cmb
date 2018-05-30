@@ -147,7 +147,6 @@ WHERE
         AND pic.callerNumber = bc.calledNumber)
 and pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
 and pic.reason is not null
-limit 10000000
 """
 
 # Statistics 1 - 1
