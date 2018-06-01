@@ -101,14 +101,14 @@ class RevenueConfig(models.Model):
     BeepToCallGap = models.IntegerField(default=60)  # in minutes
     isActive = models.BooleanField(default=False)
     timeDuration = models.IntegerField(default=30)  # This will run by default for the last 30 days worth of data
-
+    category = models.CharField(max_length=50, unique=True, blank=True, null=True)
     createdDate = models.DateTimeField(auto_now_add=True)
     updatedDate = models.DateTimeField(auto_now=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
     updatedBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
 
     def __str__(self):
-        return '%s: %s' % (self.BeepToCallGap, self.isActive)
+        return '%s: %s: %s: %s: %s' % (self.id, self.BeepToCallGap, self.isActive, self.category, self.timeDuration)
 
 
 class Freebies(models.Model):

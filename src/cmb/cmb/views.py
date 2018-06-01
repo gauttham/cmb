@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .controllers import RevenueCalculator, generateReport1, generateRevenueReport, generateNonRevenueReport, \
-    generateStats1, updatedMissedRecords
+from .controllers import generateReport1, generateRevenueReport, generateNonRevenueReport, \
+    generateStats1
 from datetime import datetime
 from . import loader
 import json
@@ -21,20 +21,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.decorators import api_view, permission_classes
 from . import tasks
 import pandas as pd
-
-
-# @api_view(["POST"])
-# def login(request):
-#     import pdb; pdb.set_trace()
-#     username = request.data.get("username")
-#     password = request.data.get("password")
-#
-#     user = authenticate(username=username, password=password)
-#     if not user:
-#         return Response({"error": "Login Failed"}, status=status.HTTP_401_UNAUTHORIZED)
-#
-#     token, _ = Token.objects.get_or_create(user=user)
-#     return Response({"status": "0", "description": "Login Failed"})
 
 
 def dec(func):
@@ -205,7 +191,7 @@ class InCdrList(APIView):
 
     @loadCsv
     def get(self, request, format=None):
-        RevenueCalculator()
+        # RevenueCalculator()
         dataset = InCdr.objects.all()
         serializer = InCdrSerializer(dataset, many=True)
         return serializer
@@ -668,18 +654,26 @@ class Stats1(APIView):
         return Response(result)
 
 
-class ExecuteRevenueCalculator(APIView):
+class ExecuteRevenueCalculatorPrepaid(APIView):
 
     def get(self, request):
         try:
-            tasks.RevenueCalculatorTask.delay()
-            print("Revenue calculator started...")
-            # RevenueCalculator()
-            tasks.updatedMissedRecordsTask.delay()
-            print("Missing Updates started...")
+            tasks.RevenueCalculatorPrepaid.delay()
+            print("Revenue calculator started for Prepaid...")
             return Response({"status": "1", "description": "Revenue calculation Started"})
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
+
+class ExecuteRevenueCalculatorPostpaid(APIView):
+
+    def get(self, request):
+        try:
+            tasks.RevenueCalculatorPostpaid.delay()
+            print("Revenue calculator started for Postpaid...")
+            return Response({"status": "1", "description": "Revenue calculation Started"})
+        except Exception as e:
+            return Response({"status": "0", "description": str(e)})
+
 
 
 class reports(APIView):

@@ -4,7 +4,7 @@ from celery.task import task, periodic_task
 from .models import testModel
 import requests
 from datetime import timedelta, datetime
-from .controllers import RevenueCalculator
+from .controllers import RevenueCalculatorPrepaid, RevenueCalculatorPostpaid
 from . import loader
 from . import controllers
 
@@ -56,11 +56,17 @@ def generate_weekly_stats1():
 
 
 
-@task(name='RevenueCalculator')
-def RevenueCalculatorTask():
-    RevenueCalculator()
+@task(name='RevenueCalculatorPrepaid')
+def RevenueCalculatorPrepaid():
+    controllers.RevenueCalculatorPrepaid()
+    controllers.updatedMissedRecordsPrepaid()
     return True
 
+@task(name='RevenueCalculatorPostpaid')
+def RevenueCalculatorPostpaid():
+    controllers.RevenueCalculatorPostpaid()
+    controllers.updatedMissedRecordsPostpaid()
+    return True
 
 @task(name='BulkLoad-dedicatedAccount')
 def BulkloadDedicatedAccount(userName, filePath):

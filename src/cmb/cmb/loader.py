@@ -101,7 +101,6 @@ def loadDedicatedAccount(userName, filePath):
 def loadServiceClass(userName, filePath):
     try:
         sc = pd.read_csv(filePath)
-
         for row in sc.iterrows():
             m = ServiceClass(id=row[1]['id'])
             m.description = row[1]['description']

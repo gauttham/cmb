@@ -24,6 +24,7 @@ from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='CMB Reconciliation Tool APIs')
 
 
+
 urlpatterns = [
     # url(r'^login', views.login),
     url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),
@@ -54,7 +55,8 @@ urlpatterns = [
     # url(r'^reports/revenueReport', views.RevenueReport.as_view()),
     # url(r'^reports/nonRevenueReport', views.NoNRevenueReport.as_view()),
     # url(r'^reports/stats1', views.Stats1.as_view()),
-    url(r'^execute/revenue', views.ExecuteRevenueCalculator.as_view()),
+    url(r'^execute/revenue/prepaid', views.ExecuteRevenueCalculatorPrepaid.as_view()),
+    url(r'^execute/revenue/postpaid', views.ExecuteRevenueCalculatorPostpaid.as_view()),
     url(r'^BulkLoadHistory/$', views.BulkLoadHistoryList.as_view()),
     url(r'^BulkLoadFailedList/$', views.BulkFailedList.as_view()),
     url(r'^login/$', views.login.as_view()),
@@ -63,6 +65,5 @@ urlpatterns = [
     url(r'^users/$', views.UserDetails.as_view()),
     url(r'^userList/$', views.UserListView.as_view()),
 ]
-
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])
 

@@ -1,14 +1,17 @@
 from .models import ExceptionList, DedicatedAccount, InCdr, DaInCdrMap, ServiceClass, RevenueConfig
 from django.db import connection
 from . import constants
-from .constants import RevenueCalculatorQuery, postpaidRevenueQuery, updateReasonMoreThan1Hour
+from .constants import RevenueCalculatorQuery, postpaidRevenueQuery, updateReasonMoreThan1HourPostpaid, updateReasonMoreThan1HourPrepaid
 from datetime import datetime, timedelta
 from . import serializers as cmbserializers
 
 
-def getRevenueConfig():
-    revenueConfig = RevenueConfig.objects.get(isActive=1)
-    return revenueConfig
+def getRevenueConfig(category):
+    try:
+        revenueConfig = RevenueConfig.objects.get(category=category)
+        return revenueConfig
+    except Exception as e:
+        return str(e)
 
 
 def getRevenueMetadatafromSC(row):
@@ -21,26 +24,14 @@ def isServiceClassValid(row):
     return flag.isRevenueShare
 
 
-def RevenueCalculator():
+def RevenueCalculatorPrepaid():
     """
     Calculates the revenue for each row and updates the row with the generated revenue
     :return: True/False
     """
     # Revenue Config will be used to parameterize the Revenue Calculator Query
-    revenueConfig = getRevenueConfig()
+    revenueConfig = getRevenueConfig('Prepaid')
     queryStr = RevenueCalculatorQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
-    postpaidQueryStr = postpaidRevenueQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
-
-    try:
-        for row in executeCustomSql(postpaidQueryStr):
-            row['revenueShared'] = row.get('callCharge') / 2
-            row['MICRevenue'] = row.get('callCharge') / 2
-            serializer = cmbserializers.InCdrSerializer(data=row)
-            if serializer.is_valid():
-                serializer.save()
-    except Exception as e:
-        print("Some Error Occurred", e)
-        return False
 
     try:
         # For prepaid revenue
@@ -85,7 +76,27 @@ def RevenueCalculator():
     except Exception as e:
         print ("Some Error Occurred:", str(e))
 
+def RevenueCalculatorPostpaid():
+    """
+    Calculates the revenue for each row and updates the row with the generated revenue
+    :return: True/False
+    """
+    # Revenue Config will be used to parameterize the Revenue Calculator Query
+    revenueConfig = getRevenueConfig('Postpaid')
+    postpaidQueryStr = postpaidRevenueQuery % (revenueConfig.BeepToCallGap, revenueConfig.timeDuration)
 
+    try:
+        for row in executeCustomSql(postpaidQueryStr):
+            row['revenueShared'] = row.get('callCharge') / 2
+            row['MICRevenue'] = row.get('callCharge') / 2
+            serializer = cmbserializers.InCdrSerializer(data=row)
+            if serializer.is_valid():
+                serializer.save()
+    except Exception as e:
+        print("Some Error Occurred", e)
+        return False
+
+        # 
 def executeCustomSql(sqlstr):
     cursor = connection.cursor()
     cursor.execute(str(sqlstr))
@@ -147,9 +158,17 @@ def generateStats1(start, end):
         print("Some Error Occurred")
 
 
-def updatedMissedRecords():
+def updatedMissedRecordsPrepaid():
     try:
-        data1 = executeCustomSql(updateReasonMoreThan1Hour)
+        data1 = executeCustomSql(updateReasonMoreThan1HourPrepaid)
+        return True
+    except Exception as e:
+        print("Some Error Occurred")
+
+
+def updatedMissedRecordsPostpaid():
+    try:
+        data1 = executeCustomSql(updateReasonMoreThan1HourPostpaid)
         return True
     except Exception as e:
         print("Some Error Occurred")
