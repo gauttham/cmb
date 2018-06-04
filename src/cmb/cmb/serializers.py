@@ -310,4 +310,4 @@ class revenueCalculationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = revenueCalculation
-        fields=('subscriberType', 'status', 'createdDate', 'updatedDate')
+        fields=('id', 'subscriberType', 'status', 'createdDate', 'updatedDate')
