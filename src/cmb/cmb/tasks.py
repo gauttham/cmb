@@ -1,12 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 import random
 from celery.task import task, periodic_task
-from .models import testModel
+from .models import testModel, revenueCalculation
 import requests
 from datetime import timedelta, datetime
 from .controllers import RevenueCalculatorPrepaid, RevenueCalculatorPostpaid
 from . import loader
 from . import controllers
+from django.utils import timezone
 
 @task(name="sum_two_numbers")
 def add(x, y):
@@ -58,15 +59,46 @@ def generate_weekly_stats1():
 
 @task(name='RevenueCalculatorPrepaid')
 def RevenueCalculatorPrepaid():
-    controllers.RevenueCalculatorPrepaid()
-    controllers.updatedMissedRecordsPrepaid()
-    return True
+    import pdb; pdb.set_trace()
+    m = revenueCalculation()
+    m.subscriberType = "Prepaid"
+    m.status = "InProgress"
+    m.createdDate = timezone.now()
+    m.updatedDate = timezone.now()
+    m.save()
+    try:
+
+        controllers.RevenueCalculatorPrepaid()
+        controllers.updatedMissedRecordsPrepaid()
+        m.status = "Completed"
+        m.updatedDate = timezone.now()
+        return True
+    except Exception as e:
+        m.status = "Failed"
+        m.updatedDate = timezone.now()
+        m.save()
+        return False
 
 @task(name='RevenueCalculatorPostpaid')
 def RevenueCalculatorPostpaid():
-    controllers.RevenueCalculatorPostpaid()
-    controllers.updatedMissedRecordsPostpaid()
-    return True
+    import pdb; pdb.set_trace()
+    m = revenueCalculation()
+    m.subscriberType = "Postpaid"
+    m.status = "InProgress"
+    m.createdDate = timezone.now()
+    m.updatedDate = timezone.now()
+    m.save()
+    try:
+        controllers.RevenueCalculatorPostpaid()
+        controllers.updatedMissedRecordsPostpaid()
+        m.status = "Completed"
+        m.updatedDate = timezone.now()
+        return True
+    except Exception as e:
+        m.status = "Failed"
+        m.updatedDate = timezone.now()
+        m.save()
+        return False
 
 @task(name='BulkLoad-dedicatedAccount')
 def BulkloadDedicatedAccount(userName, filePath):

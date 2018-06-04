@@ -226,3 +226,13 @@ class userRoles(models.Model):
     def __str__(self):
         return '%s' % (self.user)
 
+
+class revenueCalculation(models.Model):
+    subscriberType = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
+    createdDate = models.DateTimeField()
+    updatedDate = models.DateTimeField()
+
+    def __str__(self):
+        return "%s: %s" .format(self.subscriberType, self.status)
+

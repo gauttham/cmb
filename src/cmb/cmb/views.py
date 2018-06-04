@@ -1,9 +1,9 @@
 from .models import ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, beepCDR, RevenueConfig, Freebies, \
-    FreebiesType, BulkLoadHistory, BulkLoadFailedList, userRoles, Roles
+    FreebiesType, BulkLoadHistory, BulkLoadFailedList, userRoles, Roles, revenueCalculation
 from .serializers import ServiceClassSerializer, DedicatedAccountSerializer, ExceptionListSerializer, \
     DaInCdrMapSerializer, InCdrSerializer, beepCDRSerializer, RevenueConfigSerializer, FreebiesSerializer, \
     FreebiesTypeSerializer, BulkHistorySerializer, BulkLoadFailedSerializer, UserSerializer, RoleSerializer, \
-    UserListSerializer
+    UserListSerializer, revenueCalculationSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -664,6 +664,7 @@ class ExecuteRevenueCalculatorPrepaid(APIView):
         except Exception as e:
             return Response({"status": "0", "description": str(e)})
 
+
 class ExecuteRevenueCalculatorPostpaid(APIView):
 
     def get(self, request):
@@ -877,3 +878,15 @@ class UserListView(APIView):
         except Exception as e:
             return Response(str(e))
 
+
+class revenueCalculationStatus(APIView):
+    """
+    List all Service Classes, or create a new service class
+    """
+
+    @loadCsv
+    def get(self, request):
+        dataset = revenueCalculation.objects.all()
+        serializer = revenueCalculationSerializer(dataset, many=True)
+        # return Response(serializer.data)
+        return serializer

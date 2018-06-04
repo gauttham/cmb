@@ -19,7 +19,7 @@ admin.site.register(models.msisdnType)
 admin.site.register(models.ScheduleMgr)
 admin.site.register(models.Roles)
 admin.site.register(models.userRoles)
-
+admin.site.register(models.revenueCalculation)
 
 #####
 

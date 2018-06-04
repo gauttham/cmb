@@ -64,6 +64,7 @@ urlpatterns = [
     url(r'^roles/$', views.RoleList.as_view()),
     url(r'^users/$', views.UserDetails.as_view()),
     url(r'^userList/$', views.UserListView.as_view()),
+    url(r'^status/revenue/$', views.revenueCalculationStatus.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['json', 'csv'])
 

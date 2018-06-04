@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import LANGUAGE_CHOICES, STYLE_CHOICES, ServiceClass, DedicatedAccount, ExceptionList, InCdr, DaInCdrMap, \
-    Roles, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory, BulkLoadFailedList
+    Roles, beepCDR, RevenueConfig, Freebies, FreebiesType, BulkLoadHistory, BulkLoadFailedList, revenueCalculation
 from django.utils import timezone
 from . import constants
 from rest_framework.validators import UniqueValidator
@@ -304,3 +304,10 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ('username', 'firstName', 'lastName', 'lastLogin', 'createdDate')
 
 
+class revenueCalculationSerializer(serializers.ModelSerializer):
+    createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+    class Meta:
+        model = revenueCalculation
+        fields=('subscriberType', 'status', 'createdDate', 'updatedDate')
