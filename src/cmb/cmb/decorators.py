@@ -16,20 +16,20 @@ def loadCsv(func):
             resultserializer = func(*args, **kwargs)
             response = HttpResponse(content_type='text/csv')
             if request.query_params.get("reportType") == "revenueReport":
-                response['Content-Disposition'] = 'attachment; filename="RevenueReport{timestamp}.csv"'\
-                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+                response['Content-Disposition'] = 'attachment; filename="RevenueReport-{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
             elif request.query_params.get("reportType") == "nonRevenueReport":
-                response['Content-Disposition'] = 'attachment; filename="NonRevenueReport{timestamp}.csv"'\
-                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+                response['Content-Disposition'] = 'attachment; filename="NonRevenueReport-{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
             elif request.query_params.get("reportType") == "stats1":
-                response['Content-Disposition'] = 'attachment; filename="Stats1{timestamp}.csv"'\
-                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+                response['Content-Disposition'] = 'attachment; filename="Stats1-{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
             elif request.query_params.get("reportType") == "auditing1":
-                response['Content-Disposition'] = 'attachment; filename="Auditing1{timestamp}.csv"'\
-                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+                response['Content-Disposition'] = 'attachment; filename="Auditing1-{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
             else:
-                response['Content-Disposition'] = 'attachment; filename="BulkExport{timestamp}.csv"'\
-                    .format(timestamp=datetime.now().strftime('%Y%m%d%H%M'))
+                response['Content-Disposition'] = 'attachment; filename="BulkExport-{timestamp}.csv"'\
+                    .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
 
             for item in resultserializer.data[0].iterkeys():
                 header.append(item)
