@@ -233,7 +233,7 @@ class RevenueConfigSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RevenueConfig
-        fields = ('id','BeepToCallGap', 'isActive', 'createdDate', 'updatedDate', 'timeDuration')
+        fields = ('id','BeepToCallGap', 'isActive', 'createdDate', 'updatedDate', 'timeDuration', 'category')
 
 
 class FreebiesSerializer(serializers.ModelSerializer):
