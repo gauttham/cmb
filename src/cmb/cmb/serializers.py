@@ -148,10 +148,10 @@ class DaInCdrMapforInCDRSerializer(serializers.ModelSerializer):
 
 
 class InCdrSerializer(serializers.ModelSerializer):
-    callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False)
     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
-    dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True)
+    dedicatedAccounts = DaInCdrMapforInCDRSerializer(many=True, required=False)
     daCount = serializers.SerializerMethodField('get_das_count')
 
     class Meta:
@@ -160,6 +160,21 @@ class InCdrSerializer(serializers.ModelSerializer):
                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'subscriberType', 'redirectingNumber',
                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason', 'dedicatedAccounts',
                   'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+
+
+# class InCdrSerializerForRevenue(serializers.ModelSerializer):
+#     callStartTime = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False)
+#     createdDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+#     updatedDate = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", default=timezone.now)
+#     daCount = serializers.SerializerMethodField('get_das_count')
+
+#     class Meta:
+#         model = InCdr
+#         fields = ('id', 'serviceClass', 'accountValueBeforeCall', 'accountValueAfterCall', 'callCharge',
+#                   'chargedDuration', 'callStartTime', 'callerNumber', 'calledNumber', 'subscriberType', 'redirectingNumber',
+#                   'gsmCallRefNumber', 'presentationIndicator', 'revenueShared', 'reason',
+#                   'daCount', 'createdDate', 'updatedDate', 'createdBy', 'updatedBy')
+
 
     def get_das_count(self, obj):
         return constants.daCount

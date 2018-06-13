@@ -59,7 +59,6 @@ def generate_weekly_stats1():
 
 @task(name='RevenueCalculatorPrepaid')
 def RevenueCalculatorPrepaid():
-    import pdb; pdb.set_trace()
     m = revenueCalculation()
     m.subscriberType = "Prepaid"
     m.status = "InProgress"
@@ -67,7 +66,6 @@ def RevenueCalculatorPrepaid():
     m.updatedDate = timezone.now()
     m.save()
     try:
-
         controllers.RevenueCalculatorPrepaid()
         controllers.updatedMissedRecordsPrepaid()
         m.status = "Completed"
@@ -81,7 +79,6 @@ def RevenueCalculatorPrepaid():
 
 @task(name='RevenueCalculatorPostpaid')
 def RevenueCalculatorPostpaid():
-    import pdb; pdb.set_trace()
     m = revenueCalculation()
     m.subscriberType = "Postpaid"
     m.status = "InProgress"

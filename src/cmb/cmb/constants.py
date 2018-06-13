@@ -63,7 +63,7 @@ RevenueCalculatorQuery = "SELECT pic.id AS 'id', pic.serviceClass_id, " \
     "bc.callStartTime, " \
     "pic.callStartTime) <= %s " \
     "AND DATEDIFF(SYSDATE(), bc.createdDate) <= %s " \
-    "AND pic.subscriberType = 1 "
+    "AND pic.subscriberType = 1 limit 100000000000"
 
 # Revenue calculator for PostPaid CDR
 

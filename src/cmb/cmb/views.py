@@ -659,6 +659,7 @@ class ExecuteRevenueCalculatorPrepaid(APIView):
     def get(self, request):
         try:
             tasks.RevenueCalculatorPrepaid.delay()
+            # tasks.RevenueCalculatorPrepaid()
             print("Revenue calculator started for Prepaid...")
             return Response({"status": "1", "description": "Revenue calculation Started"})
         except Exception as e:
@@ -670,6 +671,7 @@ class ExecuteRevenueCalculatorPostpaid(APIView):
     def get(self, request):
         try:
             tasks.RevenueCalculatorPostpaid.delay()
+            # tasks.RevenueCalculatorPostpaid()
             print("Revenue calculator started for Postpaid...")
             return Response({"status": "1", "description": "Revenue calculation Started"})
         except Exception as e:
