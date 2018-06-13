@@ -357,6 +357,14 @@ class RevenueConfigList(APIView):
     def post(self, request, format=None):
         serializer = RevenueConfigSerializer(data=request.data)
         if serializer.is_valid():
+            if request.data.get("isActive") == True:
+                try:
+                    m = RevenueConfig.objects.get(isActive=True, category=request.data.get("category"))
+                    m.isActive = False
+                    m.save()
+                except Exception as e:
+                    print(str(e))
+                    pass
             serializer.save()
             return Response({'status': '1'})
         resp = {'status': '0', 'description': serializer.errors.get('id')[0]}

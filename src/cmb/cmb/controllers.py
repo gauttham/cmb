@@ -8,7 +8,7 @@ from . import serializers as cmbserializers
 
 def getRevenueConfig(category):
     try:
-        revenueConfig = RevenueConfig.objects.get(category=category)
+        revenueConfig = RevenueConfig.objects.get(category=category, isActive=True)
         return revenueConfig
     except Exception as e:
         return str(e)
