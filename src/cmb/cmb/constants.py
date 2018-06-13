@@ -87,18 +87,16 @@ postpaidRevenueQuery = "SELECT " \
 # Queries for reporting functianality
 
 # Report 1
-report1 = """
-select distinct sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party',
-pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge',
-sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share',
-sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage', da.product as 'Dedicated Account', bc.callStartTime as 'Beep Time'
-from cmb_serviceclass sc
-inner join cmb_incdr pic on pic.serviceClass_id = sc.id
-inner join cmb_daincdrmap dam on pic.id = dam.InCdr_id
-inner join cmb_dedicatedaccount da on dam.dedicatedAccount = da.id
-left join cmb_beepcdr bc on (pic.callerNumber=bc.calledNumber and pic.calledNumber=bc.callerNumber)
-where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')
-"""
+report1 = "select distinct sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party'," \
+" pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge', "\
+"sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share', "\
+"sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage', da.product as 'Dedicated Account', bc.callStartTime as 'Beep Time' "\
+"from cmb_serviceclass sc "\
+"inner join cmb_incdr pic on pic.serviceClass_id = sc.id "\
+"inner join cmb_daincdrmap dam on pic.id = dam.InCdr_id "\
+"inner join cmb_dedicatedaccount da on dam.dedicatedAccount = da.id "\
+"left join cmb_beepcdr bc on (pic.callerNumber=bc.calledNumber and pic.calledNumber=bc.callerNumber) "\
+"where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')"
 
 
 
@@ -106,7 +104,7 @@ where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date(
 
 # Report 2 - Revenue Report
 
-revenueReport = """select sum(chargedDuration) as 'Total Calls Duration', sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue', date_format(pic.callStartTime, '%s') as 'Time', da.product as 'Dedicated Account' from cmb_incdr pic, cmb_daincdrmap di, cmb_dedicatedaccount da where pic.id = di.InCdr_id and di.dedicatedAccount = da.id and callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H') and str_to_date('%s','%%Y-%%m-%%d %%H') and revenueShared is not null and revenueShared <> '' group by date_format(pic.callStartTime, '%s'), da.product  order by 5 """
+revenueReport = "select sum(chargedDuration) as 'Total Calls Duration', sum(callCharge) as 'Total Charge', sum(revenueShared) as 'Partner Revenue',sum(MICRevenue) as 'MIC1 Revenue', sum(revenueShared) * 2 as 'Total Revenue', date_format(pic.callStartTime, '%s') as 'Time', da.product as 'Dedicated Account' from cmb_incdr pic, cmb_daincdrmap di, cmb_dedicatedaccount da where pic.id = di.InCdr_id and di.dedicatedAccount = da.id and callStartTime between str_to_date('%s','%%Y-%%m-%%d %%H') and str_to_date('%s','%%Y-%%m-%%d %%H') and revenueShared is not null and revenueShared <> '' group by date_format(pic.callStartTime, '%s'), da.product  order by 5 "
 
 
 # Report 3 - Non Revenue Report
