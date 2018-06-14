@@ -39,7 +39,12 @@ class ServiceClassList(APIView):
 
     @loadCsv
     def get(self, request, format=None):
-        dataset = ServiceClass.objects.all()
+        if request.query_params.get("isActive") == "0":
+            dataset = ServiceClass.objects.filter(isActive=False)
+        elif request.query_params.get("isActive") == "1":
+            dataset = ServiceClass.objects.filter(isActive=True)
+        else:
+            dataset = ServiceClass.objects.all()
         serializer = ServiceClassSerializer(dataset, many=True)
         # return Response(serializer.data)
         return serializer

@@ -27,6 +27,7 @@ class ServiceClassSerializer(serializers.ModelSerializer):
         instance.updatedDate = timezone.now
         instance.otherOperatorPercentage = validated_data.get('otherOperatorPercentage', instance.otherOperatorPercentage)
         instance.privateFlagCost = validated_data.get('privateFlagCost', instance.privateFlagCost)
+        instance.isActive = validated_data.get('isActive', instance.isActive)
         instance.save()
         return {'status': '1'}
 
@@ -34,7 +35,7 @@ class ServiceClassSerializer(serializers.ModelSerializer):
         model = ServiceClass
         fields = ('id', 'description', 'isRevenueShare', 'inMobilesPercentage','privateFlagCost',
                   'otherOperatorPercentage', 'createdDate', 'updatedDate',
-                  'createdBy', 'updatedBy')
+                  'createdBy', 'updatedBy', 'isActive')
 
 
 class DedicatedAccountSerializer(serializers.ModelSerializer):
