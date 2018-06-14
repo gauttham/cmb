@@ -43,7 +43,7 @@ def RevenueCalculatorPrepaid():
             if flag == False:
                 m = InCdr.objects.get(id=row.get('id'))
                 m.revenueShared = 0
-                m.reason = 'Wrong SC'
+                m.reason = 'no revenue on service class'
                 m.createdDate = datetime.now()
                 m.updatedDate = datetime.now()
                 try:
@@ -71,7 +71,7 @@ def RevenueCalculatorPrepaid():
                     else:
                         m = InCdr.objects.get(id=row.get('id'))
                         m.revenueShared = 0
-                        m.reason = 'Wrong DA'
+                        m.reason = 'non revenue shared DA'
                         m.createdDate = datetime.now()
                         m.updatedDate = datetime.now()
                         try:
