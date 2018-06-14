@@ -161,7 +161,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -170,7 +170,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # App Defaults
-DEFAULT_APP_USER = 'Khal Drogo'
+DEFAULT_APP_USER = 'Premium App'
 
 
 # Extended Auth User Model
