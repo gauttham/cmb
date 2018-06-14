@@ -87,17 +87,59 @@ postpaidRevenueQuery = "SELECT " \
 # Queries for reporting functianality
 
 # Report 1
-report1 = "select distinct pic.gsmCallRefNumber as 'NCR', sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party'," \
-" pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge', "\
-"sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share', "\
-"sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage', da.product as 'Dedicated Account', bc.callStartTime as 'Beep Time' "\
-"from cmb_serviceclass sc "\
-"inner join cmb_incdr pic on pic.serviceClass_id = sc.id "\
-"inner join cmb_daincdrmap dam on pic.id = dam.InCdr_id "\
-"inner join cmb_dedicatedaccount da on dam.dedicatedAccount = da.id "\
-"left join cmb_beepcdr bc on (pic.callerNumber=bc.calledNumber and pic.calledNumber=bc.callerNumber) "\
-"where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d') order by pic.gsmCallRefNumber"
+# report1 = "select distinct pic.gsmCallRefNumber as 'NCR', sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party'," \
+# " pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge', "\
+# "sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share', "\
+# "sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage', da.product as 'Dedicated Account', bc.callStartTime as 'Beep Time' "\
+# "from cmb_serviceclass sc "\
+# "inner join cmb_incdr pic on pic.serviceClass_id = sc.id "\
+# "inner join cmb_daincdrmap dam on pic.id = dam.InCdr_id "\
+# "inner join cmb_dedicatedaccount da on dam.dedicatedAccount = da.id "\
+# "left join cmb_beepcdr bc on (pic.callerNumber=bc.calledNumber and pic.calledNumber=bc.callerNumber) "\
+# "where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d') order by pic.gsmCallRefNumber"
 
+report1 = """
+SELECT DISTINCT
+    pic.gsmCallRefNumber as 'NCR',
+    sc.id AS 'Servie Class ID',
+    sc.description AS 'Service Name',
+    'InMobiles' AS 'Partner Name',
+    pic.calledNumber AS 'Called Party',
+    pic.callerNumber AS 'Calling Party',
+    pic.chargedDuration AS 'Call Duration',
+    pic.callStartTime AS 'Call Time',
+    pic.callCharge AS 'Total Charge',
+    sc.inMobilesPercentage AS 'Partner Revenue Share percentage',
+    pic.revenueShared AS 'Partner Share',
+    sc.otherOperatorPercentage AS 'MIC1 Revenue Share percentage',
+    bc.callStartTime AS 'Beep Time',
+    case when pic.revenueShared is not null or pic.revenueShared > 0 then charged.chargedcols else null end as 'Charged DAs',
+    case when pic.revenueShared is not null or pic.revenueShared > 0 then noncharged.nonchargedcols  else null end as 'Non Charged DAs'
+FROM
+    cmb_serviceclass sc
+        INNER JOIN
+    cmb_incdr pic ON pic.serviceClass_id = sc.id
+        INNER JOIN
+    cmb_daincdrmap dam ON pic.id = dam.InCdr_id
+        INNER JOIN
+    cmb_dedicatedaccount da ON dam.dedicatedAccount = da.id
+        LEFT JOIN
+    cmb_beepcdr bc ON (pic.callerNumber = bc.calledNumber AND pic.calledNumber = bc.callerNumber)
+    left join 
+    (select nonchargeddas.InCdr_id, group_concat(concat('dedicatedAccount:',dedicatedAccount,',','valueBeforeCall:', valueBeforeCall,'valueAfterCall:', valueAfterCall)) as nonchargedcols
+    from
+    (select * from cmb_daincdrmap a
+    where exists (select 1 from cmb_daincdrmap b where a.InCdr_id = b.InCdr_id and valueBeforeCall = valueAfterCall)) nonchargeddas
+    group by InCdr_id) noncharged on noncharged.InCdr_id = pic.id
+    left join
+    (select chargeddas.InCdr_id, group_concat(concat('dedicatedAccount:',dedicatedAccount,',','valueBeforeCall:', valueBeforeCall,'valueAfterCall:', valueAfterCall)) as chargedcols
+    from
+    (select * from cmb_daincdrmap a
+    where exists (select 1 from cmb_daincdrmap b where a.InCdr_id = b.InCdr_id and valueBeforeCall > valueAfterCall)) chargeddas
+    group by InCdr_id) charged on pic.id = charged.InCdr_id        
+WHERE
+    pic.callStartTime BETWEEN str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d') order by pic.gsmCallRefNumber
+"""
 
 
 

@@ -31,21 +31,26 @@ def loadCsv(func):
                 response['Content-Disposition'] = 'attachment; filename="BulkExport-{timestamp}.csv"'\
                     .format(timestamp=datetime.now().strftime('%Y%m%d%H'))
 
-            for item in resultserializer.data[0].iterkeys():
-                header.append(item)
-            writer = csv.DictWriter(response, fieldnames=header)
-            writer.writeheader()
+            try:
+                for item in resultserializer.data[0].iterkeys():
+                    header.append(item)
+                writer = csv.DictWriter(response, fieldnames=header)
+                writer.writeheader()
 
-            if request.query_params.get('reportType') == 'Generate':
-                pass
-            else:
-                try:
+
+                if request.query_params.get('reportType') == 'Generate':
+                    pass
+                else:
                     for row in resultserializer.data:
                         writer.writerow(row)
-                except Exception as e:
-                    pass
 
+                    return response
+            except Exception as e:
+                writer = csv.DictWriter(response, fieldnames="Empty List")
+                writer.writeheader()
                 return response
+                return Response("Empty Dataset")
+                
 
         else:
             resultserializer = func(*args, **kwargs)
