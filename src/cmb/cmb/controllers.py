@@ -15,7 +15,7 @@ def getRevenueConfig(category):
 
 
 def getRevenueMetadatafromSC(row):
-    serviceClass = ServiceClass.objects.get(id=row.get('serviceClass_id'))
+    serviceClass = ServiceClass.objects.get(id=row.get('serviceClass_id'), isActive=True)
     return serviceClass
 
 

@@ -28,6 +28,7 @@ class ServiceClass(models.Model):
     inMobilesPercentage = models.IntegerField(null=True, default=50, db_index=True)
     privateFlagCost = models.FloatField(default=0)
     otherOperatorPercentage = models.IntegerField(null=True, default=50)
+    isActive = models.BooleanField(default=True)
     createdDate = models.DateTimeField(default=timezone.now, db_index=True)
     updatedDate = models.DateTimeField(auto_now=True, db_index=True)
     createdBy = models.CharField(max_length=50, default=settings.DEFAULT_APP_USER)
