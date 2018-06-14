@@ -26,12 +26,13 @@ class ServiceClassSerializer(serializers.ModelSerializer):
         instance.inMobilesPercentage = validated_data.get('inMobilesPercentage', instance.inMobilesPercentage)
         instance.updatedDate = timezone.now
         instance.otherOperatorPercentage = validated_data.get('otherOperatorPercentage', instance.otherOperatorPercentage)
+        instance.privateFlagCost = validated_data.get('privateFlagCost', instance.privateFlagCost)
         instance.save()
         return {'status': '1'}
 
     class Meta:
         model = ServiceClass
-        fields = ('id', 'description', 'isRevenueShare', 'inMobilesPercentage',
+        fields = ('id', 'description', 'isRevenueShare', 'inMobilesPercentage','privateFlagCost',
                   'otherOperatorPercentage', 'createdDate', 'updatedDate',
                   'createdBy', 'updatedBy')
 

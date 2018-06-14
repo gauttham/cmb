@@ -87,7 +87,7 @@ postpaidRevenueQuery = "SELECT " \
 # Queries for reporting functianality
 
 # Report 1
-report1 = "select distinct sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party'," \
+report1 = "select distinct pic.gsmCallRefNumber as 'NCR', sc.id as 'Servie Class ID', sc.description as 'Service Name', 'InMobiles' as 'Partner Name', pic.calledNumber as 'Called Party', pic.callerNumber as 'Calling Party'," \
 " pic.chargedDuration as 'Call Duration', pic.callStartTime as 'Call Time', pic.callCharge as 'Total Charge', "\
 "sc.inMobilesPercentage as 'Partner Revenue Share percentage', pic.revenueShared as 'Partner Share', "\
 "sc.otherOperatorPercentage as 'MIC1 Revenue Share percentage', da.product as 'Dedicated Account', bc.callStartTime as 'Beep Time' "\
@@ -96,7 +96,7 @@ report1 = "select distinct sc.id as 'Servie Class ID', sc.description as 'Servic
 "inner join cmb_daincdrmap dam on pic.id = dam.InCdr_id "\
 "inner join cmb_dedicatedaccount da on dam.dedicatedAccount = da.id "\
 "left join cmb_beepcdr bc on (pic.callerNumber=bc.calledNumber and pic.calledNumber=bc.callerNumber) "\
-"where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d')"
+"where pic.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s','%%Y-%%m-%%d') order by pic.gsmCallRefNumber"
 
 
 
