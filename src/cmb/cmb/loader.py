@@ -207,7 +207,8 @@ def loadCdr(userName, filePath):
                     da.updatedBy = userName
                     da.save()
             except Exception as e:
-                error_count += 1
+                # error_count += 1
+                pass
         except ValueError:
             t = BulkLoadFailedList()
             strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
