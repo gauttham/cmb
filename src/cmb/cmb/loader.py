@@ -128,6 +128,7 @@ def loadCdr(userName, filePath):
     b.type = 'inCdr'
 
     startTime = timezone.now()
+    print("TimeZone . now is :", startTime)
     error_file = open("cmb/reports/error.txt", "a")
     initial_count = df['datetime'].count()
     error_count = 0
@@ -230,10 +231,17 @@ def loadCdr(userName, filePath):
             t.BulkLoadHistory = b
             t.save()
     endTime = timezone.now()
-    b.endTime = endTime
+    b.end = endTime
     b.errorCount = error_count
     b.status = 'Complete'
-    b.save()
+    print("Sample prints:")
+    print(b.id)
+    print(b.end)
+    try:
+        b.save()
+        print("saved")
+    except Exception as e:
+        print("Exception while saving", e)
     return {"startTime": startTime.strftime('%Y-%m-%d %H:%M:%S'),
                      "endTime": endTime.strftime('%Y-%m-%d %H:%M:%S'), "initialCount": initial_count, "errorCount": error_count}
 
@@ -296,7 +304,7 @@ def loadPostCdr(userName, filePath):
                 error_count += 1
                 error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
         endTime = timezone.now()
-        b.endTime = endTime
+        b.end = endTime
         b.errorCount = error_count
         b.status = 'Complete'
         b.save()

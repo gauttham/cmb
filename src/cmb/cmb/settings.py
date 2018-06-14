@@ -54,8 +54,8 @@ CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = 'EEST'
+CELERY_ENABLE_UTC = False
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
@@ -118,9 +118,11 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'cmb_dev',
         'NAME': 'cmb',
         'USER': 'cmb_usr',
         'PASSWORD': 'CmbInmo2703$',
+        # 'PASSWORD': 'cmb123',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -156,6 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Beirut'
+# TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
