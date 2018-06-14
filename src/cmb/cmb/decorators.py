@@ -39,8 +39,11 @@ def loadCsv(func):
             if request.query_params.get('reportType') == 'Generate':
                 pass
             else:
-                for row in resultserializer.data:
-                    writer.writerow(row)
+                try:
+                    for row in resultserializer.data:
+                        writer.writerow(row)
+                except Exception as e:
+                    pass
 
                 return response
 
