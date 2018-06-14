@@ -55,8 +55,13 @@ def RevenueCalculatorPrepaid():
                 for da in DaInCdrMap.objects.filter(InCdr=row.get('id')):
                     if da.valueBeforeCall > da.valueAfterCall:
                         m = InCdr.objects.get(id=row.get('id'))
-                        m.revenueShared = row.get('callCharge') * scMetadata.inMobilesPercentage / 100
-                        m.MICRevenue = row.get('callCharge') * scMetadata.otherOperatorPercentage / 100
+                        if m.presentationIndicator == 1:
+                            # handling the case for private flag
+                            m.revenueShared = (row.get('callCharge') - scMetadata.privateFlagCost) * scMetadata.inMobilesPercentage / 100
+                            m.MICRevenue = (row.get('callCharge') - scMetadata.privateFlagCost) * scMetadata.otherOperatorPercentage / 100
+                        else:
+                            m.revenueShared = row.get('callCharge')  * scMetadata.inMobilesPercentage / 100
+                            m.MICRevenue = row.get('callCharge')  * scMetadata.otherOperatorPercentage / 100
                         m.createdDate = datetime.now()
                         m.updatedDate = datetime.now()
                         try:

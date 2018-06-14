@@ -44,7 +44,7 @@ def loadPrepaidInCdr(ppincdr):
             m.calledNumber = row[1]['calledPartyNumber']
             m.redirectingNumber = row[1]['redirectingNumber'] if pd.isnull(row[1]['redirectingNumber']) else None
             m.GsmCallRefNumber = row[1]['gSMCallReferenceNumber']
-            m.presentationIndicator = row[1]['presentationIndicator  ']
+            m.presentationIndicator = row[1]['presentationIndicator']
             m.createdDate = timezone.now()
             m.updatedDate = timezone.now()
             try:

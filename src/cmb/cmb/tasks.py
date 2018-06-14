@@ -67,9 +67,13 @@ def RevenueCalculatorPrepaid():
     m.save()
     try:
         controllers.RevenueCalculatorPrepaid()
-        controllers.updatedMissedRecordsPrepaid()
+        try:
+            controllers.updatedMissedRecordsPrepaid()
+        except Exception as e:
+            print(str(e))
         m.status = "Completed"
         m.updatedDate = timezone.now()
+        m.save()
         return True
     except Exception as e:
         m.status = "Failed"
@@ -90,6 +94,7 @@ def RevenueCalculatorPostpaid():
         controllers.updatedMissedRecordsPostpaid()
         m.status = "Completed"
         m.updatedDate = timezone.now()
+        m.save()
         return True
     except Exception as e:
         m.status = "Failed"
