@@ -142,6 +142,8 @@ def loadCdr(userName, filePath):
 
             m = InCdr()
             m.serviceClass = ServiceClass.objects.get(id=str(row['serviceClass']))
+            if m.serviceClass is None:
+                raise (ValueError)
             m.accountValueBeforeCall = row['accountValueBeforeCall']
             m.accountValueAfterCall = row['accountValueAfterCall']
             m.callCharge = row['finalChargeofCall']
@@ -206,6 +208,15 @@ def loadCdr(userName, filePath):
                     da.save()
             except Exception as e:
                 error_count += 1
+        except ValueError:
+            t = BulkLoadFailedList()
+            strrow = (','.join('' if v is None else str(v) for v in json.loads(row.to_json()).values()))
+            t.cdr = strrow
+            t.error = "Empty Service class"
+            t.createdDate = timezone.now()
+            t.uploadedBy = userName
+            t.BulkLoadHistory = b
+            t.save()
         except Exception as e:
             error_count += 1
             # error_file.write(str(timezone.now()) + "\t line number:" + str(i + 1) + "\t error:" + str(e) + "\n")
