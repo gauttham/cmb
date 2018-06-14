@@ -147,12 +147,10 @@ and a.callStartTime between str_to_date('%s','%%Y-%%m-%%d') and str_to_date('%s'
 """
 
 
-updateReasonMoreThan1HourPrepaid = """
-update cmb_incdr 
-set reason = 'Late call back'
-where (revenueShared is null or revenueShared = '') and (reason is null or reason = '')
-and subscriberType=1;
-"""
+updateReasonMoreThan1HourPrepaid = "update cmb_incdr " \
+"set reason = 'Late call back'  " \
+"where (revenueShared is null or revenueShared = '') and (reason is null or reason = '') " \
+"and subscriberType=1 " \
 
 updateReasonMoreThan1HourPostpaid = """
 update cmb_incdr 

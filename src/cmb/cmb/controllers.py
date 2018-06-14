@@ -166,7 +166,7 @@ def updatedMissedRecordsPrepaid():
         data1 = executeCustomSql(updateReasonMoreThan1HourPrepaid)
         return True
     except Exception as e:
-        print("Some Error Occurred")
+        print("Some Error Occurred", str(e))
 
 
 def updatedMissedRecordsPostpaid():
